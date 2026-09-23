@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://b22bq3qyfh1b6"]
+
+[ext_resource type="Script" uid="uid://cey461mqy8hub" path="res://Scenes/Characters/Playable/ray.gd" id="1_6v2m8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ykv2e"]
+radius = 20.0
+height = 76.0
+
+[node name="Ray" type="CharacterBody2D" unique_id=1788415153]
+script = ExtResource("1_6v2m8")
+metadata/_edit_group_ = true
+
+[node name="SpritePlaceHolder" type="ColorRect" parent="." unique_id=2105916372]
+offset_left = -20.0
+offset_top = -36.0
+offset_right = 21.0
+offset_bottom = 37.058823
+color = Color(1, 0.44705883, 0, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=238982729]
+shape = SubResource("CapsuleShape2D_ykv2e")
