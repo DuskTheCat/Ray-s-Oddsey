@@ -9,17 +9,75 @@
 [sub_resource type="GDScript" id="GDScript_u8wbt"]
 script/source = "extends Control
 
-func disable_all_buttons():
-	# Fetch every single descendant node recursively
-	var everything = get_children(true)
-	
-	for node in everything:
-		# Check if the node inherits from the Button class
-		if node is Button:
-			node.disabled = true
+var swipe_buttons: Array[TouchScreenButton] = []
+var active_touches: Dictionary = {}
 
 func _ready() -> void:
-	disable_all_buttons()"
+	find_touch_buttons(self)
+
+func find_touch_buttons(current_node: Node) -> void:
+	for child in current_node.get_children():
+		if child is TouchScreenButton:
+			swipe_buttons.append(child)
+		else:
+			find_touch_buttons(child)
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			active_touches[event.index] = event.position
+		else:
+			active_touches.erase(event.index)
+		update_button_states()
+		
+	elif event is InputEventScreenDrag:
+		active_touches[event.index] = event.position
+		update_button_states()
+		
+	elif event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				active_touches[-1] = event.position
+			else:
+				active_touches.erase(-1)
+			update_button_states()
+			
+	elif event is InputEventMouseMotion:
+		if active_touches.has(-1):
+			active_touches[-1] = event.position
+			update_button_states()
+
+func update_button_states() -> void:
+	for button in swipe_buttons:
+		if not button.is_visible_in_tree() or button.texture_normal == null:
+			continue
+			
+		var rect = Rect2(Vector2.ZERO, button.texture_normal.get_size())
+		var touch_inside = false
+		
+		for touch_pos in active_touches.values():
+			var local_pos = button.to_local(touch_pos)
+			if rect.has_point(local_pos):
+				touch_inside = true
+				break
+		
+		if touch_inside:
+			if not button.is_pressed():
+				if button.has_method(\"_on_presed\"):
+					button._on_presed()
+				elif button.has_method(\"_on_pressed\"):
+					button._on_pressed()
+				if button.action != \"\":
+					Input.action_press(button.action)
+				button.emit_signal(\"pressed\")
+		else:
+			if button.is_pressed():
+				if button.has_method(\"_on_released\"):
+					button._on_released()
+				if button.action != \"\":
+					Input.action_release(button.action)
+				button.emit_signal(\"released\")
+"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xhsim"]
 radius = 119.36
