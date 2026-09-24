@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cey461mqy8hub" path="res://Scenes/Characters/Playable/ray.gd" id="1_6v2m8"]
 [ext_resource type="PackedScene" uid="uid://bgirvoqc23ph0" path="res://Scenes/UI/MOBILE/touch_gui.tscn" id="2_p5ump"]
 [ext_resource type="Texture2D" uid="uid://dwdt41ldf5loy" path="res://Textures/Characters/Ray/Ray.png" id="3_0gqhc"]
+[ext_resource type="Script" uid="uid://ctvis3v08olhh" path="res://Scripts/Textures/sprite_sheet.gd" id="3_wje25"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ykv2e"]
 radius = 20.0
@@ -11,102 +12,8 @@ height = 76.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xhsim"]
 size = Vector2(70, 72)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0gqhc"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(0, 0, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wje25"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(878, 0, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rh68y"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(1756, 0, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_72pi2"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(0, 878, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3nnxx"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(878, 878, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m765q"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(1756, 878, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lmyrk"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(0, 1756, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_y0mgl"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(878, 1756, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ngoau"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(1756, 1756, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d6dwj"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(2634, 0, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5hawl"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(2634, 878, 878, 878)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ly181"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(2634, 1756, 878, 878)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_xhsim"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0gqhc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wje25")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rh68y")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_72pi2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3nnxx")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m765q")
-}],
-"loop": 1,
-"name": &"Idle",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lmyrk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_y0mgl")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ngoau")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d6dwj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5hawl")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ly181")
-}],
-"loop": 1,
-"name": &"Walk",
-"speed": 8.0
-}]
+animations = []
 
 [node name="Ray" type="CharacterBody2D" unique_id=1788415153]
 position = Vector2(960, 602)
@@ -147,5 +54,9 @@ disabled = true
 position = Vector2(2.0000129, -6.9999866)
 scale = Vector2(0.36248603, 0.36248603)
 sprite_frames = SubResource("SpriteFrames_xhsim")
-animation = &"Walk"
+animation = &""
 offset = Vector2(-4.05, 0)
+script = ExtResource("3_wje25")
+json_path = "res://Textures/Characters/Ray/Ray.json"
+texture_atlas = ExtResource("3_0gqhc")
+Fps = 8

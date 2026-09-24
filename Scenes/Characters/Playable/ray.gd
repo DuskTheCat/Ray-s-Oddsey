@@ -98,5 +98,7 @@ func update_camera_extent(dir: float) -> void:
 func update_animation() -> void:
 	if velocity.x == 0:
 		SPRITE.play("Idle")
+		SPRITE.sprite_frames.set_animation_speed("Idle", 8.0)
 	else:
 		SPRITE.play("Walk")
+		SPRITE.sprite_frames.set_animation_speed("Walk", 8.0)
