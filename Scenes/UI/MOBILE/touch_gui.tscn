@@ -48,6 +48,9 @@ func _input(event: InputEvent) -> void:
 			update_button_states()
 
 func update_button_states() -> void:
+	var active_actions: Dictionary = {}
+	var buttons_touched: Dictionary = {}
+
 	for button in swipe_buttons:
 		if not button.is_visible_in_tree() or button.texture_normal == null:
 			continue
@@ -55,27 +58,46 @@ func update_button_states() -> void:
 		var rect = Rect2(Vector2.ZERO, button.texture_normal.get_size())
 		var touch_inside = false
 		
-		for touch_pos in active_touches.values():
+		for touch_index in active_touches:
+			var touch_pos = active_touches[touch_index]
 			var local_pos = button.to_local(touch_pos)
 			if rect.has_point(local_pos):
 				touch_inside = true
 				break
+				
+		buttons_touched[button] = touch_inside
+		if touch_inside and button.action != \"\":
+			active_actions[button.action] = true
+
+	for button in swipe_buttons:
+		var touch_inside = buttons_touched.get(button, false)
+		var should_be_active = touch_inside or active_actions.get(button.action, false)
 		
-		if touch_inside:
-			if not button.is_pressed():
+		if should_be_active:
+			if button.action != \"\":
+				if not Input.is_action_pressed(button.action):
+					if button.has_method(\"_on_presed\"):
+						button._on_presed()
+					elif button.has_method(\"_on_pressed\"):
+						button._on_pressed()
+					Input.action_press(button.action)
+					button.emit_signal(\"pressed\")
+			else:
 				if button.has_method(\"_on_presed\"):
 					button._on_presed()
 				elif button.has_method(\"_on_pressed\"):
 					button._on_pressed()
-				if button.action != \"\":
-					Input.action_press(button.action)
 				button.emit_signal(\"pressed\")
 		else:
-			if button.is_pressed():
+			if button.action != \"\":
+				if Input.is_action_pressed(button.action):
+					if button.has_method(\"_on_released\"):
+						button._on_released()
+					Input.action_release(button.action)
+					button.emit_signal(\"released\")
+			else:
 				if button.has_method(\"_on_released\"):
 					button._on_released()
-				if button.action != \"\":
-					Input.action_release(button.action)
 				button.emit_signal(\"released\")
 "
 
