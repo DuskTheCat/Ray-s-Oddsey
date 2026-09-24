@@ -15,6 +15,11 @@ run/main_scene="uid://bl2gpm4qmfi51"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/inferred_declaration=1
+
 [display]
 
 window/size/mode=3
@@ -56,7 +61,6 @@ Sprint={
 
 [input_devices]
 
-pointing/emulate_touch_from_mouse=true
 pointing/emulate_mouse_from_touch=false
 
 [physics]

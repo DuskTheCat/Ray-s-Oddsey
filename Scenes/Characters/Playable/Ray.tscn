@@ -10,7 +10,6 @@ height = 76.0
 [node name="Ray" type="CharacterBody2D" unique_id=1788415153]
 position = Vector2(573, 323)
 script = ExtResource("1_6v2m8")
-metadata/_edit_group_ = true
 
 [node name="SpritePlaceHolder" type="ColorRect" parent="." unique_id=2105916372]
 offset_left = -20.0
@@ -25,3 +24,10 @@ shape = SubResource("CapsuleShape2D_ykv2e")
 [node name="UI" type="CanvasLayer" parent="." unique_id=147905225]
 
 [node name="TouchGUI" parent="UI" unique_id=50456712 instance=ExtResource("2_p5ump")]
+
+[node name="CamPivot" type="Node2D" parent="." unique_id=43503822]
+position = Vector2(0, -60)
+
+[node name="Camera2D" type="Camera2D" parent="CamPivot" unique_id=472938124]
+position_smoothing_enabled = true
+position_smoothing_speed = 13.0
