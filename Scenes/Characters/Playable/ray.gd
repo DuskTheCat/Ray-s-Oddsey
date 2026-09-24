@@ -9,12 +9,13 @@ extends CharacterBody2D
 				CURRENT_SPEED = RUN_SPEED 
 			else: 
 				CURRENT_SPEED = WALK_SPEED
-				
+			update_camera_extent(last_direction)
 @export var WALK_SPEED : float = 140.0
 @export var RUN_SPEED : float = 350.0
-@export var JUMP_VELOCITY : float = -500.0
+@export var JUMP_VELOCITY : float = -850.0
+@export var GRAVITY_MULTIPLIER : float = 2
 @export var SPEED_MULTIPLIER : float = 1.0
-@export var ACCELERATION : float = 2000.0
+@export var ACCELERATION : float = 1750.0
 @export var AIR_ACCELERATION : float = 1500.0
 @export var DECCELERATION : float = 2600.0
 @export var AIR_DECCELERATION : float = 500.0
@@ -24,6 +25,7 @@ var CURRENT_SPEED : float = 140.0
 @export_group("Camera")
 @export var SMOOTHNESS_SPEED : float = 6.0
 @export var EXTEND_RANGE : float = 200.0
+@export var SHORTENED_EXTEND_RANGE : float = 100.0
 
 @onready var Camera : Camera2D = $CamPivot/Camera2D
 @onready var CameraPivot : Node2D = $CamPivot
@@ -37,7 +39,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	# Gravity setup
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		velocity += (get_gravity() * GRAVITY_MULTIPLIER) * delta
 
 	# Jump handling
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
@@ -58,10 +60,8 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
-	# Handle Camera Look-Ahead dynamically based on active movement direction
-	if direction != last_direction:
-		update_camera_extent(direction)
-		last_direction = direction
+	update_camera_extent(direction)
+	last_direction = direction
 
 func _input(event: InputEvent) -> void:
 	# Toggle Sprint
@@ -74,8 +74,14 @@ func update_camera_extent(dir: float) -> void:
 		extend_tween.kill()
 		
 	# Target offset depends entirely on current movement vector direction
-	var target_x : float = dir * EXTEND_RANGE
+	var current_range: float = EXTEND_RANGE if SPRINTING else SHORTENED_EXTEND_RANGE
+	var target_x : float = dir * current_range
+	
+	# var y_direction : float = sign(velocity.y)
+	# var target_y : float = y_direction * current_range
 	
 	extend_tween = create_tween()
 	extend_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	extend_tween.tween_property(CameraPivot, "position:x", target_x, 0.5)
+	# extend_tween.parallel()
+	# extend_tween.tween_property(CameraPivot, "position:y", target_y, 0.5).set_ease(Tween.EASE_OUT)

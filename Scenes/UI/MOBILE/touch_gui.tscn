@@ -51,7 +51,7 @@ func update_button_states() -> void:
 	var active_actions: Dictionary = {}
 	var buttons_touched: Dictionary = {}
 
-	for button in swipe_buttons:
+	for button : TouchScreenButton in swipe_buttons:
 		if not button.is_visible_in_tree() or button.texture_normal == null:
 			continue
 			

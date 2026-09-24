@@ -5,12 +5,15 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xhsim"]
 size = Vector2(1030, 113)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w7ufb"]
+size = Vector2(1030, 290)
+
 [node name="Node" type="Node" unique_id=509051041]
 
 [node name="Ray" parent="." unique_id=1788415153 instance=ExtResource("1_w7ufb")]
 position = Vector2(546, 84)
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1178098634]
+[node name="Floor" type="ColorRect" parent="." unique_id=1178098634]
 offset_left = 48.0
 offset_top = 468.0
 offset_right = 1078.0
@@ -18,8 +21,22 @@ offset_bottom = 582.0
 color = Color(0.080783345, 0.080783345, 0.080783345, 1)
 metadata/_edit_group_ = true
 
-[node name="StaticBody2D" type="StaticBody2D" parent="ColorRect" unique_id=1988997415]
+[node name="StaticBody2D" type="StaticBody2D" parent="Floor" unique_id=1988997415]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ColorRect/StaticBody2D" unique_id=131441089]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor/StaticBody2D" unique_id=131441089]
 position = Vector2(515, 57.5)
 shape = SubResource("RectangleShape2D_xhsim")
+
+[node name="Floor2" type="ColorRect" parent="." unique_id=528788995]
+offset_left = 1067.0
+offset_top = 289.0
+offset_right = 2097.0
+offset_bottom = 582.0
+color = Color(0.080783345, 0.080783345, 0.080783345, 1)
+metadata/_edit_group_ = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Floor2" unique_id=1740474939]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor2/StaticBody2D" unique_id=616295112]
+position = Vector2(515, 146)
+shape = SubResource("RectangleShape2D_w7ufb")

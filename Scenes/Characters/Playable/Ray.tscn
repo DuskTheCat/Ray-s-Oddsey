@@ -7,6 +7,9 @@
 radius = 20.0
 height = 76.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xhsim"]
+size = Vector2(70, 72)
+
 [node name="Ray" type="CharacterBody2D" unique_id=1788415153]
 position = Vector2(573, 323)
 script = ExtResource("1_6v2m8")
@@ -31,3 +34,9 @@ position = Vector2(0, -60)
 [node name="Camera2D" type="Camera2D" parent="CamPivot" unique_id=472938124]
 position_smoothing_enabled = true
 position_smoothing_speed = 13.0
+
+[node name="StaticBody2D" type="StaticBody2D" parent="CamPivot" unique_id=1186496854]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CamPivot/StaticBody2D" unique_id=1062399511]
+shape = SubResource("RectangleShape2D_xhsim")
+disabled = true
