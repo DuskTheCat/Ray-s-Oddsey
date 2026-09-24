@@ -33,6 +33,10 @@ var CURRENT_SPEED : float = 140.0
 var extend_tween : Tween
 var last_direction : float = 0.0
 
+@onready var SPRITE: AnimatedSprite2D = $SpriteSheet
+
+
+
 func _ready() -> void:
 	Camera.position_smoothing_speed = SMOOTHNESS_SPEED
 
@@ -55,10 +59,15 @@ func _physics_process(delta: float) -> void:
 	# Velocity physics updates
 	if direction != 0:
 		velocity.x = move_toward(velocity.x, direction * CURRENT_SPEED * SPEED_MULTIPLIER, accel * delta)
+		if direction > 0 :
+			SPRITE.flip_h = false
+		else:
+			SPRITE.flip_h = true
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, deccel * delta)
 
 	move_and_slide()
+	update_animation()
 	
 	update_camera_extent(direction)
 	last_direction = direction
@@ -85,3 +94,9 @@ func update_camera_extent(dir: float) -> void:
 	extend_tween.tween_property(CameraPivot, "position:x", target_x, 0.5)
 	# extend_tween.parallel()
 	# extend_tween.tween_property(CameraPivot, "position:y", target_y, 0.5).set_ease(Tween.EASE_OUT)
+
+func update_animation() -> void:
+	if velocity.x == 0:
+		SPRITE.play("Idle")
+	else:
+		SPRITE.play("Walk")

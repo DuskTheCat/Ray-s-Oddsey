@@ -55,8 +55,8 @@ func update_button_states() -> void:
 		if not button.is_visible_in_tree() or button.texture_normal == null:
 			continue
 			
-		var rect = Rect2(Vector2.ZERO, button.texture_normal.get_size())
-		var touch_inside = false
+		var rect: Rect2 = Rect2(Vector2.ZERO, button.texture_normal.get_size())
+		var touch_inside : bool = false
 		
 		for touch_index in active_touches:
 			var touch_pos = active_touches[touch_index]
@@ -121,6 +121,7 @@ anchor_bottom = 1.0
 offset_top = -40.0
 offset_right = 40.0
 grow_vertical = 0
+scale = Vector2(1.475, 1.475)
 
 [node name="Left" type="Node2D" parent="BottomLeft" unique_id=585763441]
 position = Vector2(111.00001, -74)
@@ -159,6 +160,7 @@ offset_left = -40.0
 offset_top = -40.0
 grow_horizontal = 0
 grow_vertical = 0
+scale = Vector2(1.555, 1.555)
 
 [node name="Sprint" type="Node2D" parent="BottomRight" unique_id=1398872448]
 position = Vector2(-299, -74)

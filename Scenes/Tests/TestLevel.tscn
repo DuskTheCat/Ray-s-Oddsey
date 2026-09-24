@@ -11,6 +11,7 @@ size = Vector2(1030, 290)
 [node name="Node" type="Node" unique_id=509051041]
 
 [node name="Ray" parent="." unique_id=1788415153 instance=ExtResource("1_w7ufb")]
+z_index = 1
 position = Vector2(546, 84)
 
 [node name="Floor" type="ColorRect" parent="." unique_id=1178098634]
