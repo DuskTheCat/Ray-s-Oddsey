@@ -2,8 +2,24 @@
 
 [ext_resource type="Texture2D" uid="uid://dap1vdoubsr83" path="res://Textures/Buttons/Mobile/Left.png" id="1_u8wbt"]
 [ext_resource type="Texture2D" uid="uid://cixj3birp05pl" path="res://Textures/Buttons/Mobile/Right.png" id="2_jwno6"]
+[ext_resource type="Script" uid="uid://bpbfckckkax88" path="res://Scripts/UI/Pop.gd" id="2_mvv3m"]
 [ext_resource type="Texture2D" uid="uid://cjca7s7iijur0" path="res://Textures/Buttons/Mobile/Up.png" id="3_mvv3m"]
 [ext_resource type="Texture2D" uid="uid://eed71ijdqymm" path="res://Textures/Buttons/Mobile/Sprint.png" id="4_idwye"]
+
+[sub_resource type="GDScript" id="GDScript_u8wbt"]
+script/source = "extends Control
+
+func disable_all_buttons():
+	# Fetch every single descendant node recursively
+	var everything = get_children(true)
+	
+	for node in everything:
+		# Check if the node inherits from the Button class
+		if node is Button:
+			node.disabled = true
+
+func _ready() -> void:
+	disable_all_buttons()"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xhsim"]
 radius = 119.36
@@ -15,6 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = SubResource("GDScript_u8wbt")
 
 [node name="BottomLeft" type="Control" parent="." unique_id=978525179]
 layout_mode = 1
@@ -25,16 +42,26 @@ offset_top = -40.0
 offset_right = 40.0
 grow_vertical = 0
 
-[node name="Left" type="TouchScreenButton" parent="BottomLeft" unique_id=476625560]
-position = Vector2(36.000004, -150)
+[node name="Left" type="Node2D" parent="BottomLeft" unique_id=585763441]
+position = Vector2(111.00001, -74)
+script = ExtResource("2_mvv3m")
+metadata/_edit_group_ = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="BottomLeft/Left" unique_id=476625560]
+position = Vector2(-75.00001, -76)
 scale = Vector2(0.59375, 0.59375)
 texture_normal = ExtResource("1_u8wbt")
 shape = SubResource("CircleShape2D_xhsim")
 action = "Move_Left"
 visibility_mode = 1
 
-[node name="Right" type="TouchScreenButton" parent="BottomLeft" unique_id=665366779]
-position = Vector2(183, -150)
+[node name="Right" type="Node2D" parent="BottomLeft" unique_id=763125736]
+position = Vector2(338, -74)
+script = ExtResource("2_mvv3m")
+metadata/_edit_group_ = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="BottomLeft/Right" unique_id=665366779]
+position = Vector2(-75, -79)
 scale = Vector2(0.59375, 0.59375)
 texture_normal = ExtResource("2_jwno6")
 shape = SubResource("CircleShape2D_xhsim")
@@ -53,18 +80,28 @@ offset_top = -40.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="Jump" type="TouchScreenButton" parent="BottomRight" unique_id=191134647]
-position = Vector2(-178, -153)
-scale = Vector2(0.59375, 0.59375)
-texture_normal = ExtResource("3_mvv3m")
-shape = SubResource("CircleShape2D_xhsim")
-action = "Jump"
-visibility_mode = 1
+[node name="Sprint" type="Node2D" parent="BottomRight" unique_id=1398872448]
+position = Vector2(-299, -74)
+script = ExtResource("2_mvv3m")
+metadata/_edit_group_ = true
 
-[node name="Sprint" type="TouchScreenButton" parent="BottomRight" unique_id=63848567]
-position = Vector2(-375, -155)
+[node name="TouchScreenButton" type="TouchScreenButton" parent="BottomRight/Sprint" unique_id=63848567]
+position = Vector2(-76, -76)
 scale = Vector2(0.59375, 0.59375)
 texture_normal = ExtResource("4_idwye")
 shape = SubResource("CircleShape2D_xhsim")
 action = "Sprint"
+visibility_mode = 1
+
+[node name="Jump" type="Node2D" parent="BottomRight" unique_id=1053266419]
+position = Vector2(-101, -74)
+script = ExtResource("2_mvv3m")
+metadata/_edit_group_ = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="BottomRight/Jump" unique_id=191134647]
+position = Vector2(-77, -77)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("3_mvv3m")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Jump"
 visibility_mode = 1
