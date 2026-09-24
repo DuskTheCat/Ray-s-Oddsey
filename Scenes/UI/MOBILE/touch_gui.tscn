@@ -1,16 +1,70 @@
 [gd_scene format=3 uid="uid://bgirvoqc23ph0"]
 
+[ext_resource type="Texture2D" uid="uid://dap1vdoubsr83" path="res://Textures/Buttons/Mobile/Left.png" id="1_u8wbt"]
+[ext_resource type="Texture2D" uid="uid://cixj3birp05pl" path="res://Textures/Buttons/Mobile/Right.png" id="2_jwno6"]
+[ext_resource type="Texture2D" uid="uid://cjca7s7iijur0" path="res://Textures/Buttons/Mobile/Up.png" id="3_mvv3m"]
+[ext_resource type="Texture2D" uid="uid://eed71ijdqymm" path="res://Textures/Buttons/Mobile/Sprint.png" id="4_idwye"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xhsim"]
+radius = 119.36
+
 [node name="TouchGUI" type="Control" unique_id=50456712]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -69.0
-offset_top = 55.0
-offset_right = -69.0
-offset_bottom = 55.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Left" type="TouchScreenButton" parent="." unique_id=476625560]
-position = Vector2(260, 397)
+[node name="BottomLeft" type="Control" parent="." unique_id=978525179]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="Left" type="TouchScreenButton" parent="BottomLeft" unique_id=476625560]
+position = Vector2(36.000004, -150)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("1_u8wbt")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Move_Left"
+visibility_mode = 1
+
+[node name="Right" type="TouchScreenButton" parent="BottomLeft" unique_id=665366779]
+position = Vector2(183, -150)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("2_jwno6")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Move_Right"
+visibility_mode = 1
+
+[node name="BottomRight" type="Control" parent="." unique_id=1594271056]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Jump" type="TouchScreenButton" parent="BottomRight" unique_id=191134647]
+position = Vector2(-178, -153)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("3_mvv3m")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Jump"
+visibility_mode = 1
+
+[node name="Sprint" type="TouchScreenButton" parent="BottomRight" unique_id=63848567]
+position = Vector2(-375, -155)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("4_idwye")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Sprint"
+visibility_mode = 1

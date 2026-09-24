@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://b22bq3qyfh1b6"]
 
 [ext_resource type="Script" uid="uid://cey461mqy8hub" path="res://Scenes/Characters/Playable/ray.gd" id="1_6v2m8"]
+[ext_resource type="PackedScene" uid="uid://bgirvoqc23ph0" path="res://Scenes/UI/MOBILE/touch_gui.tscn" id="2_p5ump"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ykv2e"]
 radius = 20.0
 height = 76.0
 
 [node name="Ray" type="CharacterBody2D" unique_id=1788415153]
+position = Vector2(573, 323)
 script = ExtResource("1_6v2m8")
 metadata/_edit_group_ = true
 
@@ -19,3 +21,7 @@ color = Color(1, 0.44705883, 0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=238982729]
 shape = SubResource("CapsuleShape2D_ykv2e")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=147905225]
+
+[node name="TouchGUI" parent="UI" unique_id=50456712 instance=ExtResource("2_p5ump")]
