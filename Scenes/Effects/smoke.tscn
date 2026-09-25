@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://bc2vt3lu35cek"]
+
+[ext_resource type="Texture2D" uid="uid://deophc2n7p158" path="res://Textures/Effects/Smoke/SmokeFront_4.png" id="1_4v663"]
+[ext_resource type="Texture2D" uid="uid://cxw3d41tydto7" path="res://Textures/Effects/Smoke/SmokeBack_4.png" id="2_piiv2"]
+[ext_resource type="Script" uid="uid://bwlri70q2fcpw" path="res://Scripts/Reusable/AntiStutter.gd" id="3_4qjyl"]
+[ext_resource type="Script" uid="uid://cy4x5vqvqwonq" path="res://Scripts/Reusable/DeletionTimer.gd" id="4_aovot"]
+
+[sub_resource type="Curve" id="Curve_4v663"]
+_data = [Vector2(0, 0.15730345), 0.0, 0.0, 0, 0, Vector2(0.50218344, 0.1685394), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.0041112, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_piiv2"]
+curve = SubResource("Curve_4v663")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xhsim"]
+particle_flag_disable_z = true
+angle_min = -360.0
+angle_max = 360.00003
+angular_velocity_min = -20.000015
+angular_velocity_max = 19.999983
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_piiv2")
+
+[sub_resource type="Curve" id="Curve_piiv2"]
+_data = [Vector2(0, 0.21348321), 0.0, 0.0, 0, 0, Vector2(0.50218344, 0.22471917), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.0041112, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_4qjyl"]
+curve = SubResource("Curve_piiv2")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ngwbn"]
+particle_flag_disable_z = true
+angle_min = -360.0
+angle_max = 360.00003
+angular_velocity_min = -20.000015
+angular_velocity_max = 19.999983
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_4qjyl")
+
+[node name="Smoke" type="Node2D" unique_id=932582049]
+z_index = 2
+position = Vector2(811, 547)
+metadata/_edit_group_ = true
+
+[node name="Smoke" type="GPUParticles2D" parent="." unique_id=14163425]
+z_index = 1
+emitting = false
+amount = 20
+texture = ExtResource("1_4v663")
+lifetime = 0.5
+use_fixed_seed = true
+seed = 3243190500
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_xhsim")
+script = ExtResource("3_4qjyl")
+
+[node name="Smoke2" type="GPUParticles2D" parent="." unique_id=940083256]
+emitting = false
+amount = 20
+texture = ExtResource("2_piiv2")
+lifetime = 0.5
+use_fixed_seed = true
+seed = 3792244613
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_ngwbn")
+script = ExtResource("3_4qjyl")
+
+[node name="Timer" type="Timer" parent="." unique_id=1446866841]
+script = ExtResource("4_aovot")
+
+[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]

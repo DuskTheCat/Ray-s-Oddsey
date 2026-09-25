@@ -1,3 +1,5 @@
+# Duskies ultimate json reader
+
 @tool
 class_name JSONSpriteSheetAnimator
 extends AnimatedSprite2D
