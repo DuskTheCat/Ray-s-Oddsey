@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://bpbfckckkax88" path="res://Scripts/UI/Pop.gd" id="2_mvv3m"]
 [ext_resource type="Texture2D" uid="uid://cjca7s7iijur0" path="res://Textures/Buttons/Mobile/Up.png" id="3_mvv3m"]
 [ext_resource type="Texture2D" uid="uid://eed71ijdqymm" path="res://Textures/Buttons/Mobile/Sprint.png" id="4_idwye"]
+[ext_resource type="Texture2D" uid="uid://it04cr66sbpk" path="res://Textures/Buttons/Mobile/Dash.png" id="6_mvv3m"]
 
 [sub_resource type="GDScript" id="GDScript_u8wbt"]
 script/source = "extends Control
@@ -137,6 +138,19 @@ shape = SubResource("CircleShape2D_xhsim")
 action = "Move_Left"
 visibility_mode = 1
 
+[node name="Up" type="Node2D" parent="BottomLeft" unique_id=261378583]
+position = Vector2(216.94916, -215.59322)
+script = ExtResource("2_mvv3m")
+metadata/_edit_group_ = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="BottomLeft/Up" unique_id=1390866798]
+position = Vector2(-75.00001, -76)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("3_mvv3m")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Move_Up"
+visibility_mode = 1
+
 [node name="Right" type="Node2D" parent="BottomLeft" unique_id=763125736]
 position = Vector2(338, -74)
 script = ExtResource("2_mvv3m")
@@ -187,4 +201,17 @@ scale = Vector2(0.59375, 0.59375)
 texture_normal = ExtResource("3_mvv3m")
 shape = SubResource("CircleShape2D_xhsim")
 action = "Jump"
+visibility_mode = 1
+
+[node name="Dash" type="Node2D" parent="BottomRight" unique_id=588657161]
+position = Vector2(-201.2862, -237.94212)
+script = ExtResource("2_mvv3m")
+metadata/_edit_group_ = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="BottomRight/Dash" unique_id=230922961]
+position = Vector2(-76, -76)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("6_mvv3m")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Dash"
 visibility_mode = 1

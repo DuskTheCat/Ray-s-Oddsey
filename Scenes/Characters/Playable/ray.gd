@@ -43,7 +43,6 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var shortened_extend_range: float = 1.0
 
 # --- Onready Nodes ---
-@onready var fire_bar: TextureProgressBar = $UI/SafeScreen/FireBar/TextureProgressBar2
 @onready var fire_fill: Timer = $FireFill
 @onready var dash_timeout: Timer = $DashTimeout
 @onready var smoke: GPUParticles2D = $Smoke/Smoke
@@ -73,22 +72,19 @@ var fire: float = 100.0:
 			fire_bar.value = value
 
 # --- Built-in Lifecycle Methods ---
+@onready var fire_bar_container: Control = $UI/SafeScreen/FireBar
+@onready var fire_bar: TextureProgressBar = $UI/SafeScreen/FireBar/TextureProgressBar2
+
 func _ready() -> void:
 	fire = max_fire
 	current_speed = walk_speed
 	camera.position_smoothing_speed = smoothness_speed
 	
-	# Safe 4.7 compatible UI Anchor setup
-	if OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios"):
-		fire_bar.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	else:
-		fire_bar.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	# Target the parent container node rather than the child progress bar
+	var preset := Control.PRESET_TOP_LEFT if (OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")) else Control.PRESET_BOTTOM_LEFT
 	
-	# Manually clear properties to avoid non-existent function problems
-	fire_bar.offset_left = 0
-	fire_bar.offset_right = 0
-	fire_bar.offset_top = 0
-	fire_bar.offset_bottom = 0
+	fire_bar_container.set_anchors_preset(preset, false)
+
 
 
 func _physics_process(delta: float) -> void:
