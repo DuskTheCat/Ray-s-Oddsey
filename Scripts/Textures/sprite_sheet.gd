@@ -27,6 +27,42 @@ var _detected_animations: Array[String] = []
 
 
 func _ready() -> void:
+	# Connect frame finished signal to ensure non-looping animations stop cleanly
+	if not animation_finished.is_connected(_on_animation_finished):
+		animation_finished.connect(_on_animation_finished)
+
+	if Engine.is_editor_hint():
+		var editor_file_system = EditorInterface.get_resource_filesystem() if Engine.has_singleton("EditorInterface") else null
+		if editor_file_system and not editor_file_system.filesystem_changed.is_connected(_on_filesystem_changed):
+			editor_file_system.filesystem_changed.connect(_on_filesystem_changed)
+
+	_update_sprite_frames()
+	
+	if not Engine.is_editor_hint() and sprite_frames:
+		var anim_names = sprite_frames.get_animation_names()
+		if anim_names.size() > 0:
+			var default_anim = anim_names[0]
+			for anim in anim_names:
+				if anim.to_lower() == "idle":
+					default_anim = anim
+					break
+			self.play(default_anim)
+
+
+func _on_animation_finished() -> void:
+	# Explicitly stop non-looping animations on the last frame
+	if sprite_frames and sprite_frames.has_animation(animation):
+		if not sprite_frames.get_animation_loop(animation):
+			stop()
+			frame = sprite_frames.get_frame_count(animation) - 1
+
+
+func _on_filesystem_changed() -> void:
+	if Engine.is_editor_hint() and not json_path.is_empty():
+		_reload_animations_from_json()
+
+
+func _update_sprite_frames() -> void:
 	if json_path.is_empty() or not texture_atlas:
 		if not Engine.is_editor_hint():
 			printerr("Please assign both the JSON path and Texture Atlas in the Inspector!")
@@ -37,16 +73,6 @@ func _ready() -> void:
 		return
 		
 	self.sprite_frames = new_sprite_frames
-	
-	if not Engine.is_editor_hint():
-		var anim_names = new_sprite_frames.get_animation_names()
-		if anim_names.size() > 0:
-			var default_anim = anim_names[0]
-			for anim in anim_names:
-				if anim.to_lower() == "idle":
-					default_anim = anim
-					break
-			self.play(default_anim)
 
 
 # --- DYNAMIC PROPERTY INJECTION ---
@@ -72,7 +98,6 @@ func _reload_animations_from_json() -> void:
 				if not _detected_animations.has(anim_name):
 					_detected_animations.append(anim_name)
 					
-					# Set initial default values if they don't exist yet
 					var loop_key = anim_name.to_lower() + "_loop"
 					var fps_key = anim_name.to_lower() + "_fps"
 					if not _dynamic_properties.has(loop_key):
@@ -80,11 +105,18 @@ func _reload_animations_from_json() -> void:
 					if not _dynamic_properties.has(fps_key):
 						_dynamic_properties[fps_key] = float(default_fps)
 
+	_update_sprite_frames()
 	notify_property_list_changed()
 
 
 func _get_property_list() -> Array[Dictionary]:
 	var properties: Array[Dictionary] = []
+	
+	properties.append({
+		"name": "reload_json_now",
+		"type": TYPE_BOOL,
+		"usage": PROPERTY_USAGE_EDITOR
+	})
 	
 	if _detected_animations.is_empty() and not json_path.is_empty():
 		_reload_animations_from_json()
@@ -92,7 +124,6 @@ func _get_property_list() -> Array[Dictionary]:
 	for anim_name in _detected_animations:
 		var prefix = anim_name.to_lower()
 		
-		# Add a category header in the Inspector for each detected animation
 		properties.append({
 			"name": anim_name + " Animation",
 			"type": TYPE_NIL,
@@ -117,16 +148,33 @@ func _get_property_list() -> Array[Dictionary]:
 
 
 func _get(property: StringName):
+	if property == &"reload_json_now":
+		return false
 	if _dynamic_properties.has(property):
 		return _dynamic_properties[property]
 	return null
 
 
 func _set(property: StringName, value) -> bool:
+	if property == &"reload_json_now":
+		if value:
+			_reload_animations_from_json()
+		return true
+
 	if property.ends_with("_loop") or property.ends_with("_fps"):
 		_dynamic_properties[property] = value
-		if Engine.is_editor_hint() and texture_atlas and not json_path.is_empty():
-			_ready()
+		
+		for anim_name in _detected_animations:
+			var prefix = anim_name.to_lower()
+			if property == prefix + "_loop":
+				var loop_val = bool(value)
+				if sprite_frames and sprite_frames.has_animation(anim_name):
+					sprite_frames.set_animation_loop(anim_name, loop_val)
+			elif property == prefix + "_fps":
+				var fps_val = float(value)
+				if sprite_frames and sprite_frames.has_animation(anim_name):
+					sprite_frames.set_animation_speed(anim_name, fps_val)
+					
 		return true
 	return false
 
@@ -190,14 +238,13 @@ static func parse_spritesheet_json(path: String, atlas: Texture2D, custom_fps: i
 		for frame_item in frame_list:
 			new_sprite_frames.add_frame(anim_name, frame_item["texture"])
 		
-		# Look up dynamic property overrides (e.g., "idle_loop", "idle_fps")
 		var prefix = anim_name.to_lower()
 		var anim_loop = dynamic_props.get(prefix + "_loop", true)
 		var anim_fps = dynamic_props.get(prefix + "_fps", float(custom_fps))
 		
-		new_sprite_frames.set_animation_loop(anim_name, anim_loop)
+		new_sprite_frames.set_animation_loop(anim_name, bool(anim_loop))
 		if anim_fps > 0:
-			new_sprite_frames.set_animation_speed(anim_name, anim_fps)
+			new_sprite_frames.set_animation_speed(anim_name, float(anim_fps))
 			
 	return new_sprite_frames
 

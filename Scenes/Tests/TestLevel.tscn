@@ -8,6 +8,12 @@ size = Vector2(1030, 113)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w7ufb"]
 size = Vector2(1030, 290)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bd0oy"]
+size = Vector2(427, 252)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ykv2e"]
+size = Vector2(50, 12)
+
 [node name="Node" type="Node" unique_id=509051041]
 
 [node name="Ray" parent="." unique_id=1788415153 instance=ExtResource("1_w7ufb")]
@@ -41,3 +47,47 @@ metadata/_edit_group_ = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor2/StaticBody2D" unique_id=616295112]
 position = Vector2(515, 146)
 shape = SubResource("RectangleShape2D_w7ufb")
+
+[node name="Floor3" type="ColorRect" parent="." unique_id=136936167]
+offset_left = 1670.0
+offset_top = 38.0
+offset_right = 2097.0
+offset_bottom = 290.0
+color = Color(0.080783345, 0.080783345, 0.080783345, 1)
+metadata/_edit_group_ = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Floor3" unique_id=2101466375]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor3/StaticBody2D" unique_id=1041601051]
+position = Vector2(213.5, 127)
+shape = SubResource("RectangleShape2D_bd0oy")
+
+[node name="Ledges" type="Node2D" parent="." unique_id=2135229703]
+
+[node name="Ledge" type="Area2D" parent="Ledges" unique_id=756698900 groups=["Ledge"]]
+position = Vector2(1092, 297)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge" unique_id=1737077556]
+shape = SubResource("RectangleShape2D_ykv2e")
+
+[node name="Ledge4" type="Area2D" parent="Ledges" unique_id=1753640693 groups=["Ledge"]]
+position = Vector2(75, 475)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge4" unique_id=2057125985]
+shape = SubResource("RectangleShape2D_ykv2e")
+
+[node name="Ledge2" type="Area2D" parent="Ledges" unique_id=721662575 groups=["Ledge"]]
+position = Vector2(1696, 44)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge2" unique_id=2116538904]
+shape = SubResource("RectangleShape2D_ykv2e")
+
+[node name="Ledge3" type="Area2D" parent="Ledges" unique_id=251099558 groups=["Ledge"]]
+position = Vector2(2072, 44)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge3" unique_id=1985980486]
+shape = SubResource("RectangleShape2D_ykv2e")

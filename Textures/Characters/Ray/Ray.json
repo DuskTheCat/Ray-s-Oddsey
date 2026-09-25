@@ -1,9 +1,34 @@
 {
   "frames": [
     {
-      "filename": "RaySprites/Idle_2.png",
+      "filename": "Jump_2.png",
       "frame": {
         "x": 0,
+        "y": 0,
+        "w": 139,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 361,
+        "y": 325,
+        "w": 139,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Idle_2.png",
+      "frame": {
+        "x": 139,
         "y": 0,
         "w": 138,
         "h": 249
@@ -26,9 +51,84 @@
       }
     },
     {
-      "filename": "RaySprites/Idle_1.png",
+      "filename": "LedgeGrab_4.png",
       "frame": {
-        "x": 138,
+        "x": 0,
+        "y": 256,
+        "w": 148,
+        "h": 249
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 370,
+        "y": 328,
+        "w": 148,
+        "h": 249
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "LedgeGrab_3.png",
+      "frame": {
+        "x": 277,
+        "y": 0,
+        "w": 153,
+        "h": 248
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 365,
+        "y": 330,
+        "w": 153,
+        "h": 248
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "LedgeGrab_1.png",
+      "frame": {
+        "x": 148,
+        "y": 249,
+        "w": 163,
+        "h": 247
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 355,
+        "y": 344,
+        "w": 163,
+        "h": 247
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Idle_1.png",
+      "frame": {
+        "x": 430,
         "y": 0,
         "w": 135,
         "h": 245
@@ -51,10 +151,60 @@
       }
     },
     {
-      "filename": "RaySprites/Walk_5.png",
+      "filename": "Jump_3.png",
+      "frame": {
+        "x": 311,
+        "y": 248,
+        "w": 138,
+        "h": 245
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 364,
+        "y": 325,
+        "w": 138,
+        "h": 245
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Walk_4.png",
       "frame": {
         "x": 0,
-        "y": 249,
+        "y": 505,
+        "w": 152,
+        "h": 245
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 378,
+        "y": 333,
+        "w": 152,
+        "h": 245
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Walk_5.png",
+      "frame": {
+        "x": 152,
+        "y": 496,
         "w": 147,
         "h": 245
       },
@@ -76,20 +226,20 @@
       }
     },
     {
-      "filename": "RaySprites/Walk_4.png",
+      "filename": "LedgeGrab_2.png",
       "frame": {
-        "x": 273,
-        "y": 0,
-        "w": 152,
-        "h": 245
+        "x": 299,
+        "y": 496,
+        "w": 161,
+        "h": 244
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 378,
-        "y": 333,
-        "w": 152,
-        "h": 245
+        "x": 357,
+        "y": 337,
+        "w": 161,
+        "h": 244
       },
       "sourceSize": {
         "w": 878,
@@ -101,10 +251,10 @@
       }
     },
     {
-      "filename": "RaySprites/Walk_2.png",
+      "filename": "Walk_2.png",
       "frame": {
-        "x": 147,
-        "y": 245,
+        "x": 565,
+        "y": 0,
         "w": 152,
         "h": 244
       },
@@ -126,10 +276,35 @@
       }
     },
     {
-      "filename": "RaySprites/Idle_6.png",
+      "filename": "Idle_3.png",
       "frame": {
-        "x": 425,
-        "y": 0,
+        "x": 449,
+        "y": 245,
+        "w": 135,
+        "h": 242
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 366,
+        "y": 328,
+        "w": 135,
+        "h": 242
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Idle_6.png",
+      "frame": {
+        "x": 460,
+        "y": 487,
         "w": 135,
         "h": 242
       },
@@ -151,10 +326,10 @@
       }
     },
     {
-      "filename": "RaySprites/Walk_6.png",
+      "filename": "Walk_6.png",
       "frame": {
-        "x": 299,
-        "y": 245,
+        "x": 717,
+        "y": 0,
         "w": 140,
         "h": 242
       },
@@ -176,85 +351,10 @@
       }
     },
     {
-      "filename": "RaySprites/Idle_3.png",
+      "filename": "Idle_5.png",
       "frame": {
-        "x": 0,
-        "y": 494,
-        "w": 135,
-        "h": 242
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 366,
-        "y": 328,
-        "w": 135,
-        "h": 242
-      },
-      "sourceSize": {
-        "w": 878,
-        "h": 878
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "RaySprites/Walk_1.png",
-      "frame": {
-        "x": 135,
-        "y": 494,
-        "w": 152,
-        "h": 241
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 378,
-        "y": 333,
-        "w": 152,
-        "h": 241
-      },
-      "sourceSize": {
-        "w": 878,
-        "h": 878
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "RaySprites/Walk_3.png",
-      "frame": {
-        "x": 287,
-        "y": 489,
-        "w": 146,
-        "h": 241
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 394,
-        "y": 337,
-        "w": 146,
-        "h": 241
-      },
-      "sourceSize": {
-        "w": 878,
-        "h": 878
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "RaySprites/Idle_5.png",
-      "frame": {
-        "x": 560,
-        "y": 0,
+        "x": 584,
+        "y": 244,
         "w": 136,
         "h": 241
       },
@@ -276,10 +376,85 @@
       }
     },
     {
-      "filename": "RaySprites/Idle_4.png",
+      "filename": "Walk_1.png",
       "frame": {
-        "x": 433,
-        "y": 487,
+        "x": 595,
+        "y": 485,
+        "w": 152,
+        "h": 241
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 378,
+        "y": 333,
+        "w": 152,
+        "h": 241
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Walk_3.png",
+      "frame": {
+        "x": 0,
+        "y": 750,
+        "w": 146,
+        "h": 241
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 394,
+        "y": 337,
+        "w": 146,
+        "h": 241
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Fall_1.png",
+      "frame": {
+        "x": 146,
+        "y": 750,
+        "w": 158,
+        "h": 237
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 357,
+        "y": 326,
+        "w": 158,
+        "h": 237
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Idle_4.png",
+      "frame": {
+        "x": 720,
+        "y": 242,
         "w": 137,
         "h": 237
       },
@@ -301,10 +476,35 @@
       }
     },
     {
-      "filename": "RaySprites/Run_6.png",
+      "filename": "Fall_2.png",
       "frame": {
-        "x": 439,
-        "y": 242,
+        "x": 304,
+        "y": 740,
+        "w": 162,
+        "h": 236
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 353,
+        "y": 327,
+        "w": 162,
+        "h": 236
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Run_6.png",
+      "frame": {
+        "x": 466,
+        "y": 729,
         "w": 176,
         "h": 235
       },
@@ -326,20 +526,20 @@
       }
     },
     {
-      "filename": "RaySprites/Run_3.png",
+      "filename": "Fall_3.png",
       "frame": {
-        "x": 696,
-        "y": 0,
-        "w": 178,
-        "h": 232
+        "x": 642,
+        "y": 726,
+        "w": 162,
+        "h": 233
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 369,
-        "y": 341,
-        "w": 178,
-        "h": 232
+        "x": 353,
+        "y": 329,
+        "w": 162,
+        "h": 233
       },
       "sourceSize": {
         "w": 878,
@@ -351,10 +551,10 @@
       }
     },
     {
-      "filename": "RaySprites/Run_1.png",
+      "filename": "Run_1.png",
       "frame": {
-        "x": 570,
-        "y": 477,
+        "x": 857,
+        "y": 0,
         "w": 198,
         "h": 232
       },
@@ -376,10 +576,35 @@
       }
     },
     {
-      "filename": "RaySprites/Run_4.png",
+      "filename": "Run_3.png",
       "frame": {
-        "x": 615,
-        "y": 241,
+        "x": 747,
+        "y": 479,
+        "w": 178,
+        "h": 232
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 369,
+        "y": 341,
+        "w": 178,
+        "h": 232
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Run_4.png",
+      "frame": {
+        "x": 857,
+        "y": 232,
         "w": 195,
         "h": 229
       },
@@ -401,10 +626,35 @@
       }
     },
     {
-      "filename": "RaySprites/Run_2.png",
+      "filename": "Jump_1.png",
+      "frame": {
+        "x": 804,
+        "y": 711,
+        "w": 158,
+        "h": 226
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 356,
+        "y": 357,
+        "w": 158,
+        "h": 226
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Run_2.png",
       "frame": {
         "x": 0,
-        "y": 736,
+        "y": 991,
         "w": 195,
         "h": 216
       },
@@ -426,10 +676,10 @@
       }
     },
     {
-      "filename": "RaySprites/Run_5.png",
+      "filename": "Run_5.png",
       "frame": {
         "x": 195,
-        "y": 735,
+        "y": 987,
         "w": 197,
         "h": 215
       },
@@ -452,13 +702,13 @@
     }
   ],
   "meta": {
-    "app": "http://free-tex-packer.com",
+    "app": "https://free-tex-packer.org",
     "version": "0.6.7",
     "image": "Ray.png",
     "format": "RGBA8888",
     "size": {
-      "w": 874,
-      "h": 952
+      "w": 1055,
+      "h": 1207
     },
     "scale": 1
   }
