@@ -51,10 +51,18 @@ func _ready() -> void:
 	Camera.position_smoothing_speed = SMOOTHNESS_SPEED
 	ledge_timeout.wait_time = LEDGE_TIMEOUT
 	
-	if OS.has_feature("mobile") or OS.has_feature("web_android"):
+	if OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios"):
 		fire_bar.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	else:
 		fire_bar.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	
+	fire_bar.offset_left = 0
+	fire_bar.offset_right = 0
+	fire_bar.offset_top = 0
+	fire_bar.offset_bottom = 0
+	
+
+
 		
 func _physics_process(delta: float) -> void:
 	# Gravity setup
