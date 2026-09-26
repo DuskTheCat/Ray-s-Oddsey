@@ -37,7 +37,7 @@ func _setup_upnp_and_emit_code(port: int) -> void:
 	upnp = UPNP.new()
 	var discover_result := upnp.discover()
 	
-	var public_ip := DEFAULT_IP
+	var host_ip := get_local_ip() # Default to local LAN IP for fallback
 	
 	if discover_result == UPNP.UPNP_RESULT_SUCCESS and upnp.get_gateway() and upnp.get_gateway().is_valid_gateway():
 		# Try mapping with description first, fallback to empty description if router rejects it
@@ -50,11 +50,11 @@ func _setup_upnp_and_emit_code(port: int) -> void:
 			
 		var external_ip := upnp.query_external_address()
 		if not external_ip.is_empty():
-			public_ip = external_ip
+			host_ip = external_ip
 	else:
-		push_warning("UPnP Discovery failed or gateway invalid (Error: %d). Localhost assigned." % discover_result)
+		push_warning("UPnP Discovery failed or gateway invalid (Error: %d). Using Local IP fallback: %s" % [discover_result, host_ip])
 
-	var room_code := ip_to_code(public_ip)
+	var room_code := ip_to_code(host_ip)
 	room_code_generated.emit(room_code)
 
 
@@ -89,13 +89,18 @@ func start_client(ip: String = DEFAULT_IP, port: int = DEFAULT_PORT) -> void:
 func join_via_room_code(code: String, port: int = DEFAULT_PORT) -> void:
 	var clean_code := code.strip_edges()
 
-	# Localhost override for local testing
+	# Localhost override for local testing on 1 machine
 	if clean_code.to_lower() == "local" or clean_code == DEFAULT_IP:
 		start_client(DEFAULT_IP, port)
 		return
 
+	# LAN override: allow typing raw IPv4 addresses (e.g., 192.168.1.50) directly for cross-device local testing
+	if clean_code.is_valid_ip_address():
+		start_client(clean_code, port)
+		return
+
 	if clean_code.is_empty() or clean_code.length() != 8:
-		push_warning("Join failed: Code must be an 8-character hex string or 'local'.")
+		push_warning("Join failed: Code must be an 8-character hex string, IP address, or 'local'.")
 		return
 
 	var target_ip := code_to_ip(clean_code)
@@ -104,6 +109,15 @@ func join_via_room_code(code: String, port: int = DEFAULT_PORT) -> void:
 		return
 
 	start_client(target_ip, port)
+
+# --- UTILITIES & NETWORK DISCOVERY ---
+
+func get_local_ip() -> String:
+	# Iterates local network interfaces to fetch your LAN IP (e.g., 192.168.x.x)
+	for ip in IP.get_local_addresses():
+		if ip.begins_with("192.168.") or ip.begins_with("10.") or (ip.begins_with("172.") and ip.split(".")[1].to_int() >= 16 and ip.split(".")[1].to_int() <= 31):
+			return ip
+	return DEFAULT_IP
 
 # --- ENCODER / DECODER ---
 
