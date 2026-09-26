@@ -106,8 +106,10 @@ func _ready() -> void:
 	
 	# Target the parent container node rather than the child progress bar
 	var preset := Control.PRESET_TOP_LEFT if (OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")) else Control.PRESET_BOTTOM_LEFT
-	
+	if OS.has_feature("mobile"):
+		Input.emulate_mouse_from_touch = false
 	fire_bar_container.set_anchors_preset(preset, false)
+
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
@@ -197,12 +199,20 @@ func _physics_process(delta: float) -> void:
 			set_smoke_emitting(false)
 
 func _input(event: InputEvent) -> void:
-	if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority():
+		return
+
 	if current_movement_state == MovementState.PHYSICS_OBJECT and not is_ground_dashing:
 		return
 		
+	# Handles physical keyboard press (toggles) OR custom UI true/false sets safely
 	if event.is_action_pressed("Sprint"):
-		sprinting = not sprinting
+		# Check if the incoming custom UI event explicitly carries a pressed state
+		if event is InputEventAction and event.action == "Sprint":
+			sprinting = event.pressed
+		else:
+			# Keyboard/controller fallback toggle functionality intact
+			sprinting = not sprinting
 		
 	if event.is_action_pressed("Dash") and can_dash:
 		if dash_timeout.is_stopped():
@@ -210,6 +220,9 @@ func _input(event: InputEvent) -> void:
 			
 	if event.is_action_pressed("Punch"):
 		punch()
+
+
+
 
 # --- Gameplay Actions ---
 func dash() -> void:

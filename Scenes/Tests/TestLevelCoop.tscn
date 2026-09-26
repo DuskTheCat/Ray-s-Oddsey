@@ -293,10 +293,6 @@ Spawn_Node = NodePath("..")
 
 [node name="NetworkUI" parent="CanvasLayer" unique_id=1570128733 instance=ExtResource("6_x4lpi")]
 
-[node name="HOST" parent="CanvasLayer/NetworkUI/VBoxContainer" parent_id_path=PackedInt32Array(1570128733, 2024802963) index="0" unique_id=628148764]
-text = "HOST
-"
-
 [node name="VBoxContainer2" parent="CanvasLayer/NetworkUI" index="1" unique_id=179600590]
 offset_left = -70.99994
 offset_top = 136.00002

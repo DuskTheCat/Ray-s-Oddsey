@@ -12,6 +12,12 @@ script/source = "extends Control
 
 var swipe_buttons: Array[TouchScreenButton] = []
 var active_touches: Dictionary = {}
+var fired_pressed_actions: Dictionary = {} 
+
+# NEW: Tracks the current toggle state of specific action buttons
+var action_toggles: Dictionary = {
+	\"Sprint\": false
+}
 
 func _ready() -> void:
 	find_touch_buttons(self)
@@ -25,7 +31,6 @@ func find_touch_buttons(current_node: Node) -> void:
 			find_touch_buttons(child)
 
 func _input(event: InputEvent) -> void:
-	
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			active_touches[event.index] = event.position
@@ -78,30 +83,38 @@ func update_button_states() -> void:
 		
 		if should_be_active:
 			if button.action != \"\":
-				if not Input.is_action_pressed(button.action):
-					if button.has_method(\"_on_presed\"):
-						button._on_presed()
-					elif button.has_method(\"_on_pressed\"):
-						button._on_pressed()
-					Input.action_press(button.action)
+				if not fired_pressed_actions.get(button.action, false):
+					fired_pressed_actions[button.action] = true
+					
+					# SPECIAL TOGGLE HANDLING
+					if action_toggles.has(button.action):
+						# Flip the toggle state internally
+						action_toggles[button.action] = not action_toggles[button.action]
+						# Send the true or false state explicitly to the player routing engine
+						_parse_dynamic_event(button.action, action_toggles[button.action])
+					else:
+						# Standard immediate button action (Dash, Punch)
+						_parse_dynamic_event(button.action, true)
+					
+					if button.has_method(\"_on_pressed\"): button._on_pressed()
 					button.emit_signal(\"pressed\")
-			else:
-				if button.has_method(\"_on_presed\"):
-					button._on_presed()
-				elif button.has_method(\"_on_pressed\"):
-					button._on_pressed()
-				button.emit_signal(\"pressed\")
 		else:
 			if button.action != \"\":
-				if Input.is_action_pressed(button.action):
-					if button.has_method(\"_on_released\"):
-						button._on_released()
-					Input.action_release(button.action)
+				if fired_pressed_actions.get(button.action, false):
+					fired_pressed_actions[button.action] = false
+					
+					# Only clear non-toggle buttons on release
+					if not action_toggles.has(button.action):
+						_parse_dynamic_event(button.action, false)
+						
+					if button.has_method(\"_on_released\"): button._on_released()
 					button.emit_signal(\"released\")
-			else:
-				if button.has_method(\"_on_released\"):
-					button._on_released()
-				button.emit_signal(\"released\")
+
+func _parse_dynamic_event(action_name: String, is_pressed: bool) -> void:
+	var iea := InputEventAction.new()
+	iea.action = action_name
+	iea.pressed = is_pressed
+	Input.parse_input_event(iea)
 "
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xhsim"]

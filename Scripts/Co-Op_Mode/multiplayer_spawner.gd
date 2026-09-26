@@ -16,7 +16,11 @@ func _ready() -> void:
 # Custom spawn method used internally by Godot's MultiplayerSpawner
 func _custom_spawn(data: Dictionary) -> Node:
 	var player = network_player.instantiate()
-	player.global_position = Spawn_Node.global_position
+	
+	# Fallback to local position if Spawn_Node isn't set
+	if Spawn_Node:
+		player.global_position = Spawn_Node.global_position
+		
 	player.name = str(data["id"])
 	return player
 	
@@ -29,8 +33,8 @@ func spawn_player(id: int) -> void:
 	if not multiplayer.is_server(): 
 		return
 	
-	var spawn_node = get_node(spawn_path)
-	if spawn_node.has_node(str(id)):
+	var parent_node = get_node_or_null(spawn_path)
+	if not parent_node or parent_node.has_node(str(id)):
 		return
 
 	# Calling spawn() forces MultiplayerSpawner to instantiate AND replicate to clients
@@ -40,6 +44,17 @@ func remove_player(id: int) -> void:
 	if not multiplayer.is_server(): 
 		return
 		
-	var spawn_node = get_node(spawn_path)
-	if spawn_node.has_node(str(id)):
-		spawn_node.get_node(str(id)).queue_free()
+	var parent_node = get_node_or_null(spawn_path)
+	if parent_node and parent_node.has_node(str(id)):
+		var player_node = parent_node.get_node(str(id))
+		player_node.queue_free()
+
+# Handle local quit gracefully for the host or local peer
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		# If the local player closes the window while acting as server,
+		# clean up all connected players before exiting
+		if multiplayer.is_server():
+			for peer_id in multiplayer.get_peers():
+				remove_player(peer_id)
+			remove_player(1) # Remove host
