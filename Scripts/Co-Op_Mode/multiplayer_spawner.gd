@@ -16,10 +16,10 @@ func _ready() -> void:
 # Custom spawn method used internally by Godot's MultiplayerSpawner
 func _custom_spawn(data: Dictionary) -> Node:
 	var player = network_player.instantiate()
-	player.gobal_position = Spawn_Node.global_position
+	player.global_position = Spawn_Node.global_position
 	player.name = str(data["id"])
 	return player
-
+	
 # Public function to trigger host spawn manually
 func spawn_host() -> void:
 	if multiplayer.is_server():

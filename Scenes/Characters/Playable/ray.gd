@@ -38,6 +38,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 		# Run UI update regardless of authority so client displays match
 		if is_instance_valid(fire_bar):
 			fire_bar.value = value
+@export var punch_dash_speed: float = 5.0 # How fast the player lunges forward
 
 
 @export_group("State")
@@ -59,6 +60,13 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var sprite: AnimatedSprite2D = $SpriteSheet
 @onready var ledge_detector_area: Area2D = $LedgeDetecorArea
 @onready var ledge_timeout: Timer = $LedgeTimeout
+@onready var fire_bar_container: Control = $UI/SafeScreen/FireBar
+@onready var fire_bar: TextureProgressBar = $UI/SafeScreen/FireBar/TextureProgressBar2
+@onready var ui: CanvasLayer = $UI
+@onready var health_bar_container: Control = $UI/SafeScreen/HealthBar
+@onready var health_bar: TextureProgressBar = $UI/SafeScreen/HealthBar/TextureProgressBar2
+@onready var punch_timeout: Timer = $PunchTimeout
+@onready var punch_cooldown: Timer = $PunchCooldown
 
 # --- Private / Runtime Variables ---
 var current_speed: float = 1.4
@@ -71,11 +79,8 @@ var ground_dash_direction: float = 0.0
 var extend_tween: Tween
 var modulate_tween: Tween
 var last_direction: float = 0.0
-
-# --- Built-in Lifecycle Methods ---
-@onready var fire_bar_container: Control = $UI/SafeScreen/FireBar
-@onready var fire_bar: TextureProgressBar = $UI/SafeScreen/FireBar/TextureProgressBar2
-@onready var ui: CanvasLayer = $UI
+var combo_count: int = 0
+var can_punch: bool = true
 
 @export_group("Stats")
 @export var Health : float = 100.0:
@@ -83,9 +88,6 @@ var last_direction: float = 0.0
 		Health = value
 		health_bar.value = value
 @export var Max_Health : float = 100.0
-
-@onready var health_bar_container: Control = $UI/SafeScreen/HealthBar
-@onready var health_bar: TextureProgressBar = $UI/SafeScreen/HealthBar/TextureProgressBar2
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -106,8 +108,6 @@ func _ready() -> void:
 	var preset := Control.PRESET_TOP_LEFT if (OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")) else Control.PRESET_BOTTOM_LEFT
 	
 	fire_bar_container.set_anchors_preset(preset, false)
-
-
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
@@ -196,9 +196,6 @@ func _physics_process(delta: float) -> void:
 			current_movement_state = MovementState.NORMAL
 			set_smoke_emitting(false)
 
-
-
-
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): return
 	if current_movement_state == MovementState.PHYSICS_OBJECT and not is_ground_dashing:
@@ -210,6 +207,9 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Dash") and can_dash:
 		if dash_timeout.is_stopped():
 			dash()
+			
+	if event.is_action_pressed("Punch"):
+		punch()
 
 # --- Gameplay Actions ---
 func dash() -> void:
@@ -266,7 +266,7 @@ func dash() -> void:
 			set_smoke_emitting(false)
 			
 			# Hold the frozen dash frame for a moment
-			await get_tree().create_timer(0.15).timeout
+			await get_tree().create_timer(0.05).timeout
 			
 			# Cleanly return to normal state if we haven't walked off since
 			if is_on_floor():
@@ -290,8 +290,13 @@ func dash() -> void:
 	else:
 		# --- AIR DASH VERSION ---
 		is_ground_dashing = false
+		if current_movement_state == MovementState.ON_LEDGE:
+			exit_ledge()
+			sprite.flip_h = not sprite.flip_h
 		if fire < 20: return
 		fire -= 20.0
+		ground_dash_direction = -1.0 if sprite.flip_h else 1.0
+		launch_vector = Vector2(ground_dash_direction * dash_velocity, 0.0)
 		apply_physics_impulse(launch_vector, true)
 		
 		# Darken instantly
@@ -301,9 +306,6 @@ func dash() -> void:
 		modulate_tween = create_tween()
 		modulate_tween.tween_property(sprite, "self_modulate", Color.WHITE, dash_time)
 
-
-
-
 func apply_physics_impulse(impulse_velocity: Vector2, from_air_dash: bool = false) -> void:
 	if not is_multiplayer_authority(): return
 	current_movement_state = MovementState.PHYSICS_OBJECT
@@ -312,12 +314,12 @@ func apply_physics_impulse(impulse_velocity: Vector2, from_air_dash: bool = fals
 	if from_air_dash:
 		rpc("spawn_explosion")
 
-
 func grab_ledge() -> void:
 	if not is_multiplayer_authority(): return
 	current_movement_state = MovementState.ON_LEDGE
 	velocity = Vector2.ZERO
-
+	dash_timeout.stop()
+	is_ground_dashing = false
 
 func exit_ledge() -> void:
 	if not is_multiplayer_authority(): return
@@ -326,13 +328,11 @@ func exit_ledge() -> void:
 	velocity.y = jump_velocity * UNIT_SCALE
 
 # --- Helper Methods ---
-
 @rpc("any_peer", "call_local", "reliable")
 func spawn_explosion() -> void:
 	var explosion := EXPLOSION.instantiate() as Node2D
 	explosion.global_position = global_position
 	get_tree().root.add_child(explosion)
-
 
 func set_smoke_emitting(emitting: bool) -> void:
 	if is_instance_valid(smoke) and is_instance_valid(smoke_2):
@@ -340,7 +340,6 @@ func set_smoke_emitting(emitting: bool) -> void:
 			smoke.emitting = emitting
 		if smoke_2.Override == false:
 			smoke_2.emitting = emitting
-
 
 func update_camera_extent(dir: float) -> void:
 	if not is_multiplayer_authority(): return
@@ -353,7 +352,6 @@ func update_camera_extent(dir: float) -> void:
 	extend_tween = create_tween()
 	extend_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	extend_tween.tween_property(camera_pivot, "position:x", target_x, 0.5)
-
 
 func update_animation() -> void:
 	if not is_multiplayer_authority(): return
@@ -384,15 +382,86 @@ func _on_ledge_detecor_area_area_entered(area: Area2D) -> void:
 		if (not sprite.flip_h and diff > 0) or (sprite.flip_h and diff < 0):
 			grab_ledge()
 
-
 func _on_fire_fill_timeout() -> void:
 	if not is_multiplayer_authority(): return
 	if fire < 100:
 		fire += 0.5
-		
 
 func damage(value: float) -> void:
 	Health = max(Health - value, 0.0)
 
 func heal(value: float) -> void:
 	Health = min(Health + value, Max_Health)
+
+# --- Updated Punch Implementation ---
+
+var old_speed: float = -1.0 # Initialize to sentinel value
+
+func punch() -> void:
+	if not can_punch:
+		return
+		
+	# Instantly lock execution until cooldown completes
+	can_punch = false
+	punch_cooldown.start()
+	
+	# Only store speed_multiplier if we haven't already saved it
+	if old_speed < 0.0:
+		old_speed = speed_multiplier
+	speed_multiplier = 0.0
+	
+	# Stop combo reset timer while attacking
+	punch_timeout.start()
+	
+	# Advance combo step (1 through 4)
+	combo_count = (combo_count % 4) + 1
+	
+	# Handle Fire requirement for Step 4
+	if combo_count == 4:
+		if fire > 20:
+			fire -= 20
+		else:
+			# Reset to Step 1 if not enough fire
+			combo_count = 1
+	
+	var current_step: int = combo_count
+	
+	# Force override animations to guarantee current punch plays
+	override_animations = true
+	
+	# Apply forward lunge impulse
+	var forward_direction: float = -1.0 if sprite.flip_h else 1.0
+	velocity.x = forward_direction * (punch_dash_speed * UNIT_SCALE)
+	
+	# Play corresponding punch animation
+	match current_step:
+		1: sprite.play("Punch1")
+		2: sprite.play("Punch2")
+		3: sprite.play("Punch3")
+		4:
+			sprite.play("Punch4")
+			_execute_finisher()
+			
+
+func _execute_finisher() -> void:
+	# Use a timer or await safely
+	var timer = get_tree().create_timer(0.1)
+	await timer.timeout
+	if not is_inside_tree(): 
+		return # Ensure node wasn't freed during wait
+		
+	sprite.flip_h = not sprite.flip_h
+	rpc("spawn_explosion")
+	dash()
+
+func _on_punch_cooldown_timeout() -> void:
+	can_punch = true
+	override_animations = false
+	
+	# Restore speed properly
+	if old_speed >= 0.0:
+		speed_multiplier = old_speed
+		old_speed = -1.0 # Reset sentinel
+
+func _on_punch_timeout_timeout() -> void:
+	combo_count = 0

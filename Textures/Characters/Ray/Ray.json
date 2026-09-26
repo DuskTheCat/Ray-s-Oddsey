@@ -1,9 +1,59 @@
 {
   "frames": [
     {
-      "filename": "Dash_5.png",
+      "filename": "Punch1_2.png",
       "frame": {
         "x": 0,
+        "y": 0,
+        "w": 311,
+        "h": 215
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 302,
+        "y": 358,
+        "w": 311,
+        "h": 215
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch2_2.png",
+      "frame": {
+        "x": 0,
+        "y": 215,
+        "w": 311,
+        "h": 215
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 299,
+        "y": 358,
+        "w": 311,
+        "h": 215
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Dash_5.png",
+      "frame": {
+        "x": 311,
         "y": 0,
         "w": 172,
         "h": 262
@@ -28,8 +78,8 @@
     {
       "filename": "Jump_2.png",
       "frame": {
-        "x": 172,
-        "y": 0,
+        "x": 0,
+        "y": 430,
         "w": 139,
         "h": 256
       },
@@ -51,9 +101,34 @@
       }
     },
     {
+      "filename": "Punch4_1.png",
+      "frame": {
+        "x": 139,
+        "y": 430,
+        "w": 185,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 362,
+        "y": 347,
+        "w": 185,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
       "filename": "Idle_2.png",
       "frame": {
-        "x": 0,
+        "x": 324,
         "y": 262,
         "w": 138,
         "h": 249
@@ -78,8 +153,8 @@
     {
       "filename": "LedgeGrab_4.png",
       "frame": {
-        "x": 138,
-        "y": 262,
+        "x": 483,
+        "y": 0,
         "w": 148,
         "h": 249
       },
@@ -103,8 +178,8 @@
     {
       "filename": "LedgeGrab_3.png",
       "frame": {
-        "x": 311,
-        "y": 0,
+        "x": 462,
+        "y": 262,
         "w": 153,
         "h": 248
       },
@@ -126,10 +201,35 @@
       }
     },
     {
+      "filename": "Punch4_2.png",
+      "frame": {
+        "x": 631,
+        "y": 0,
+        "w": 186,
+        "h": 248
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 363,
+        "y": 352,
+        "w": 186,
+        "h": 248
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
       "filename": "LedgeGrab_1.png",
       "frame": {
-        "x": 286,
-        "y": 256,
+        "x": 631,
+        "y": 248,
         "w": 163,
         "h": 247
       },
@@ -151,10 +251,35 @@
       }
     },
     {
+      "filename": "Punch4_3.png",
+      "frame": {
+        "x": 0,
+        "y": 686,
+        "w": 185,
+        "h": 246
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 364,
+        "y": 354,
+        "w": 185,
+        "h": 246
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
       "filename": "Idle_1.png",
       "frame": {
-        "x": 464,
-        "y": 0,
+        "x": 185,
+        "y": 686,
         "w": 135,
         "h": 245
       },
@@ -178,8 +303,8 @@
     {
       "filename": "Jump_3.png",
       "frame": {
-        "x": 449,
-        "y": 248,
+        "x": 320,
+        "y": 686,
         "w": 138,
         "h": 245
       },
@@ -203,8 +328,8 @@
     {
       "filename": "Walk_4.png",
       "frame": {
-        "x": 0,
-        "y": 511,
+        "x": 615,
+        "y": 495,
         "w": 152,
         "h": 245
       },
@@ -228,8 +353,8 @@
     {
       "filename": "Walk_5.png",
       "frame": {
-        "x": 152,
-        "y": 511,
+        "x": 462,
+        "y": 510,
         "w": 147,
         "h": 245
       },
@@ -253,8 +378,8 @@
     {
       "filename": "LedgeGrab_2.png",
       "frame": {
-        "x": 299,
-        "y": 503,
+        "x": 817,
+        "y": 0,
         "w": 161,
         "h": 244
       },
@@ -278,8 +403,8 @@
     {
       "filename": "Walk_2.png",
       "frame": {
-        "x": 599,
-        "y": 0,
+        "x": 817,
+        "y": 244,
         "w": 152,
         "h": 244
       },
@@ -303,8 +428,8 @@
     {
       "filename": "Idle_3.png",
       "frame": {
-        "x": 599,
-        "y": 244,
+        "x": 794,
+        "y": 488,
         "w": 135,
         "h": 242
       },
@@ -328,8 +453,8 @@
     {
       "filename": "Idle_6.png",
       "frame": {
-        "x": 460,
-        "y": 493,
+        "x": 0,
+        "y": 932,
         "w": 135,
         "h": 242
       },
@@ -353,8 +478,8 @@
     {
       "filename": "Walk_6.png",
       "frame": {
-        "x": 595,
-        "y": 486,
+        "x": 135,
+        "y": 932,
         "w": 140,
         "h": 242
       },
@@ -378,8 +503,8 @@
     {
       "filename": "Idle_5.png",
       "frame": {
-        "x": 751,
-        "y": 0,
+        "x": 275,
+        "y": 931,
         "w": 136,
         "h": 241
       },
@@ -403,8 +528,8 @@
     {
       "filename": "Walk_1.png",
       "frame": {
-        "x": 735,
-        "y": 244,
+        "x": 411,
+        "y": 931,
         "w": 152,
         "h": 241
       },
@@ -428,8 +553,8 @@
     {
       "filename": "Walk_3.png",
       "frame": {
-        "x": 735,
-        "y": 485,
+        "x": 767,
+        "y": 730,
         "w": 146,
         "h": 241
       },
@@ -453,8 +578,8 @@
     {
       "filename": "Fall_1.png",
       "frame": {
-        "x": 0,
-        "y": 756,
+        "x": 609,
+        "y": 740,
         "w": 158,
         "h": 237
       },
@@ -478,8 +603,8 @@
     {
       "filename": "Idle_4.png",
       "frame": {
-        "x": 158,
-        "y": 756,
+        "x": 978,
+        "y": 0,
         "w": 137,
         "h": 237
       },
@@ -503,8 +628,8 @@
     {
       "filename": "Fall_2.png",
       "frame": {
-        "x": 295,
-        "y": 756,
+        "x": 929,
+        "y": 488,
         "w": 162,
         "h": 236
       },
@@ -528,8 +653,8 @@
     {
       "filename": "Run_6.png",
       "frame": {
-        "x": 457,
-        "y": 747,
+        "x": 929,
+        "y": 724,
         "w": 176,
         "h": 235
       },
@@ -553,8 +678,8 @@
     {
       "filename": "Fall_3.png",
       "frame": {
-        "x": 633,
-        "y": 728,
+        "x": 1115,
+        "y": 0,
         "w": 162,
         "h": 233
       },
@@ -578,8 +703,8 @@
     {
       "filename": "Run_1.png",
       "frame": {
-        "x": 887,
-        "y": 0,
+        "x": 969,
+        "y": 244,
         "w": 198,
         "h": 232
       },
@@ -603,8 +728,8 @@
     {
       "filename": "Run_3.png",
       "frame": {
-        "x": 887,
-        "y": 232,
+        "x": 1091,
+        "y": 476,
         "w": 178,
         "h": 232
       },
@@ -628,8 +753,8 @@
     {
       "filename": "Dash_4.png",
       "frame": {
-        "x": 887,
-        "y": 464,
+        "x": 0,
+        "y": 1174,
         "w": 184,
         "h": 231
       },
@@ -651,10 +776,110 @@
       }
     },
     {
+      "filename": "Punch1_1.png",
+      "frame": {
+        "x": 184,
+        "y": 1174,
+        "w": 141,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 378,
+        "y": 343,
+        "w": 141,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch1_7.png",
+      "frame": {
+        "x": 325,
+        "y": 1172,
+        "w": 137,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 384,
+        "y": 343,
+        "w": 137,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch2_1.png",
+      "frame": {
+        "x": 462,
+        "y": 1172,
+        "w": 135,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 384,
+        "y": 343,
+        "w": 135,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch2_6.png",
+      "frame": {
+        "x": 1105,
+        "y": 708,
+        "w": 135,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 384,
+        "y": 343,
+        "w": 135,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
       "filename": "Run_4.png",
       "frame": {
-        "x": 881,
-        "y": 695,
+        "x": 913,
+        "y": 959,
         "w": 195,
         "h": 229
       },
@@ -676,10 +901,85 @@
       }
     },
     {
+      "filename": "Punch1_5.png",
+      "frame": {
+        "x": 767,
+        "y": 971,
+        "w": 135,
+        "h": 227
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 386,
+        "y": 344,
+        "w": 135,
+        "h": 227
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch1_6.png",
+      "frame": {
+        "x": 1108,
+        "y": 938,
+        "w": 135,
+        "h": 227
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 386,
+        "y": 344,
+        "w": 135,
+        "h": 227
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch2_5.png",
+      "frame": {
+        "x": 1108,
+        "y": 1165,
+        "w": 135,
+        "h": 227
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 386,
+        "y": 344,
+        "w": 135,
+        "h": 227
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
       "filename": "Jump_1.png",
       "frame": {
-        "x": 0,
-        "y": 993,
+        "x": 597,
+        "y": 977,
         "w": 158,
         "h": 226
       },
@@ -703,8 +1003,8 @@
     {
       "filename": "Dash_1.png",
       "frame": {
-        "x": 158,
-        "y": 993,
+        "x": 1277,
+        "y": 0,
         "w": 181,
         "h": 225
       },
@@ -728,8 +1028,8 @@
     {
       "filename": "Dash_2.png",
       "frame": {
-        "x": 339,
-        "y": 992,
+        "x": 1240,
+        "y": 708,
         "w": 182,
         "h": 225
       },
@@ -753,8 +1053,8 @@
     {
       "filename": "Dash_3.png",
       "frame": {
-        "x": 521,
-        "y": 982,
+        "x": 1269,
+        "y": 233,
         "w": 186,
         "h": 225
       },
@@ -776,10 +1076,60 @@
       }
     },
     {
+      "filename": "Punch1_4.png",
+      "frame": {
+        "x": 1269,
+        "y": 458,
+        "w": 134,
+        "h": 225
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 388,
+        "y": 346,
+        "w": 134,
+        "h": 225
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch2_4.png",
+      "frame": {
+        "x": 1243,
+        "y": 933,
+        "w": 134,
+        "h": 225
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 388,
+        "y": 346,
+        "w": 134,
+        "h": 225
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
       "filename": "Ragdoll_1.png",
       "frame": {
-        "x": 707,
-        "y": 961,
+        "x": 1243,
+        "y": 1158,
         "w": 179,
         "h": 223
       },
@@ -801,10 +1151,60 @@
       }
     },
     {
+      "filename": "Punch1_3.png",
+      "frame": {
+        "x": 0,
+        "y": 1405,
+        "w": 213,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 394,
+        "y": 351,
+        "w": 213,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch2_3.png",
+      "frame": {
+        "x": 213,
+        "y": 1404,
+        "w": 218,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 394,
+        "y": 351,
+        "w": 218,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
       "filename": "Run_2.png",
       "frame": {
-        "x": 886,
-        "y": 924,
+        "x": 431,
+        "y": 1402,
         "w": 195,
         "h": 216
       },
@@ -828,8 +1228,8 @@
     {
       "filename": "Run_5.png",
       "frame": {
-        "x": 1085,
-        "y": 0,
+        "x": 902,
+        "y": 1188,
         "w": 197,
         "h": 215
       },
@@ -849,6 +1249,181 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    {
+      "filename": "Punch3_1.png",
+      "frame": {
+        "x": 184,
+        "y": 1174,
+        "w": 141,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 378,
+        "y": 343,
+        "w": 141,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch3_2.png",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 311,
+        "h": 215
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 302,
+        "y": 358,
+        "w": 311,
+        "h": 215
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch3_3.png",
+      "frame": {
+        "x": 0,
+        "y": 1405,
+        "w": 213,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 394,
+        "y": 351,
+        "w": 213,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch3_4.png",
+      "frame": {
+        "x": 1269,
+        "y": 458,
+        "w": 134,
+        "h": 225
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 388,
+        "y": 346,
+        "w": 134,
+        "h": 225
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch3_5.png",
+      "frame": {
+        "x": 767,
+        "y": 971,
+        "w": 135,
+        "h": 227
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 386,
+        "y": 344,
+        "w": 135,
+        "h": 227
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch3_6.png",
+      "frame": {
+        "x": 1108,
+        "y": 938,
+        "w": 135,
+        "h": 227
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 386,
+        "y": 344,
+        "w": 135,
+        "h": 227
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "Punch3_7.png",
+      "frame": {
+        "x": 325,
+        "y": 1172,
+        "w": 137,
+        "h": 230
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 384,
+        "y": 343,
+        "w": 137,
+        "h": 230
+      },
+      "sourceSize": {
+        "w": 878,
+        "h": 878
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   ],
   "meta": {
@@ -857,8 +1432,8 @@
     "image": "Ray.png",
     "format": "RGBA8888",
     "size": {
-      "w": 1282,
-      "h": 1219
+      "w": 1458,
+      "h": 1625
     },
     "scale": 1
   }

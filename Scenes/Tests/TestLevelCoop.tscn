@@ -281,12 +281,13 @@ metadata/_edit_group_ = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge3" unique_id=1985980486]
 shape = SubResource("RectangleShape2D_ykv2e")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1954018795]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1954018795 node_paths=PackedStringArray("Spawn_Node")]
 _spawnable_scenes = PackedStringArray("uid://b22bq3qyfh1b6", "uid://b40tmrjat0rwd")
 spawn_path = NodePath("..")
 spawn_limit = 2
 script = ExtResource("4_bbdmo")
 network_player = ExtResource("5_rpbxn")
+Spawn_Node = NodePath("..")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=354242175]
 
