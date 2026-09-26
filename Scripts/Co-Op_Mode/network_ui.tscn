@@ -40,12 +40,13 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -70.99994
-offset_top = 136.00002
-offset_right = 201.0
-offset_bottom = 374.0
+offset_left = -121.0
+offset_top = 98.000015
+offset_right = 151.0
+offset_bottom = 336.0
 grow_horizontal = 2
-scale = Vector2(0.51958716, 0.51958716)
+scale = Vector2(0.9149867, 0.9149867)
+mouse_filter = 0
 alignment = 1
 
 [node name="InputCode" type="LineEdit" parent="VBoxContainer2" unique_id=372285730]
@@ -54,6 +55,8 @@ focus_mode = 1
 theme_override_font_sizes/font_size = 32
 placeholder_text = "ServerCode"
 alignment = 1
+max_length = 8
+select_all_on_focus = true
 
 [node name="ServerCode" type="Label" parent="." unique_id=1546394496]
 layout_mode = 1

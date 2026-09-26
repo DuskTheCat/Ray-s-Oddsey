@@ -46,3 +46,8 @@ func _on_connected_to_server() -> void:
 func _on_connection_failed() -> void:
 	server_code.text = "Connection Failed! Check code/router."
 	push_error("Could not connect to host server.")
+	
+func _on_input_code_focus_entered() -> void:
+	# Pass the current text of the input line so the OS keyboard syncs correctly
+	DisplayServer.virtual_keyboard_show(input_code.text)
+				
