@@ -32,6 +32,13 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var air_dash_ragdolls: bool = true
 @export var bounciness: float = 0.35
 @export var physics_friction: float = 10.0
+@export var fire: float = 100.0:
+	set(value):
+		fire = value
+		# Run UI update regardless of authority so client displays match
+		if is_instance_valid(fire_bar):
+			fire_bar.value = value
+
 
 @export_group("State")
 @export var current_state: State = State.NORMAL
@@ -65,18 +72,26 @@ var extend_tween: Tween
 var modulate_tween: Tween
 var last_direction: float = 0.0
 
-var fire: float = 100.0:
-	set(value):
-		fire = value
-		if is_instance_valid(fire_bar):
-			fire_bar.value = value
+
 
 # --- Built-in Lifecycle Methods ---
 @onready var fire_bar_container: Control = $UI/SafeScreen/FireBar
 @onready var fire_bar: TextureProgressBar = $UI/SafeScreen/FireBar/TextureProgressBar2
+@onready var ui: CanvasLayer = $UI
+
+
+func _enter_tree() -> void:
+	set_multiplayer_authority(name.to_int())
 
 func _ready() -> void:
+	if is_multiplayer_authority():
+		camera.make_current()
+	else:
+		ui.visible = false
+		camera.enabled = false
 	fire = max_fire
+	fire_bar.value = max_fire
+	fire_bar.max_value = max_fire
 	current_speed = walk_speed
 	camera.position_smoothing_speed = smoothness_speed
 	
@@ -88,6 +103,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority(): return
 	if is_on_floor():
 		can_dash = true
 		
@@ -177,6 +193,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if not is_multiplayer_authority(): return
 	if current_movement_state == MovementState.PHYSICS_OBJECT and not is_ground_dashing:
 		return
 		
@@ -204,7 +221,7 @@ func dash() -> void:
 		current_movement_state = MovementState.NORMAL
 		velocity.y = -dash_velocity * UNIT_SCALE
 		can_dash = false
-		spawn_explosion()
+		rpc("spawn_explosion")
 		sprite.play("Jump")
 		set_smoke_emitting(true)
 		
@@ -281,24 +298,29 @@ func dash() -> void:
 
 
 func apply_physics_impulse(impulse_velocity: Vector2, from_air_dash: bool = false) -> void:
+	if not is_multiplayer_authority(): return
 	current_movement_state = MovementState.PHYSICS_OBJECT
 	is_air_dash_ragdoll = from_air_dash
 	velocity = impulse_velocity * UNIT_SCALE
 	if from_air_dash:
-		spawn_explosion()
+		rpc("spawn_explosion")
 
 
 func grab_ledge() -> void:
+	if not is_multiplayer_authority(): return
 	current_movement_state = MovementState.ON_LEDGE
 	velocity = Vector2.ZERO
 
 
 func exit_ledge() -> void:
+	if not is_multiplayer_authority(): return
 	ledge_timeout.start()
 	current_movement_state = MovementState.NORMAL
 	velocity.y = jump_velocity * UNIT_SCALE
 
 # --- Helper Methods ---
+
+@rpc("any_peer", "call_local", "reliable")
 func spawn_explosion() -> void:
 	var explosion := EXPLOSION.instantiate() as Node2D
 	explosion.global_position = global_position
@@ -314,6 +336,7 @@ func set_smoke_emitting(emitting: bool) -> void:
 
 
 func update_camera_extent(dir: float) -> void:
+	if not is_multiplayer_authority(): return
 	if extend_tween and extend_tween.is_running():
 		extend_tween.kill()
 		
@@ -326,6 +349,7 @@ func update_camera_extent(dir: float) -> void:
 
 
 func update_animation() -> void:
+	if not is_multiplayer_authority(): return
 	if override_animations:
 		return
 		
@@ -344,6 +368,7 @@ func update_animation() -> void:
 
 # --- Signal Connections ---
 func _on_ledge_detecor_area_area_entered(area: Area2D) -> void:
+	if not is_multiplayer_authority(): return
 	if current_movement_state == MovementState.PHYSICS_OBJECT or current_movement_state == MovementState.ON_LEDGE or not ledge_timeout.is_stopped():
 		return
 		
@@ -354,5 +379,6 @@ func _on_ledge_detecor_area_area_entered(area: Area2D) -> void:
 
 
 func _on_fire_fill_timeout() -> void:
+	if not is_multiplayer_authority(): return
 	if fire < 100:
 		fire += 0.5

@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Ray's Oddsey"
-run/main_scene="uid://bl2gpm4qmfi51"
+run/main_scene="uid://16c6ke7yf2m8"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 LoadManager="*uid://7r27emuv3vu0"
+NetworkHandler="*uid://1e2qieep75fp"
 
 [debug]
 
@@ -31,6 +32,7 @@ window/size/viewport_height=1080
 window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/vsync/vsync_mode=0
 
 [editor_plugins]
 

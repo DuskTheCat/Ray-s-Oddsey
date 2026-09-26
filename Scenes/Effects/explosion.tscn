@@ -4,30 +4,35 @@
 [ext_resource type="Script" uid="uid://ctvis3v08olhh" path="res://Scripts/Textures/sprite_sheet.gd" id="2_p8ya4"]
 [ext_resource type="Script" uid="uid://cy4x5vqvqwonq" path="res://Scripts/Reusable/DeletionTimer.gd" id="3_p8ya4"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_masby"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_p8ya4"]
 atlas = ExtResource("1_7bxo0")
 region = Rect2(990, 374, 239, 253)
 margin = Rect2(145, 131, 273, 259)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6lkf1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_masby"]
 atlas = ExtResource("1_7bxo0")
 region = Rect2(512, 436, 453, 467)
 margin = Rect2(26, 19, 59, 45)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cddv8"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_6lkf1"]
 atlas = ExtResource("1_7bxo0")
 region = Rect2(990, 0, 356, 374)
 margin = Rect2(78, 55, 156, 138)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_12woy"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_cddv8"]
 atlas = ExtResource("1_7bxo0")
 region = Rect2(458, 947, 417, 395)
 margin = Rect2(46, 43, 95, 117)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_niiv2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_12woy"]
 atlas = ExtResource("1_7bxo0")
 region = Rect2(0, 947, 458, 441)
 margin = Rect2(37, 28, 54, 71)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_niiv2"]
+atlas = ExtResource("1_7bxo0")
+region = Rect2(512, 0, 478, 436)
+margin = Rect2(30, 18, 34, 76)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uldd8"]
 atlas = ExtResource("1_7bxo0")
@@ -36,8 +41,8 @@ margin = Rect2(30, 18, 34, 76)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_60luq"]
 atlas = ExtResource("1_7bxo0")
-region = Rect2(512, 0, 478, 436)
-margin = Rect2(30, 18, 34, 76)
+region = Rect2(0, 512, 476, 435)
+margin = Rect2(26, 16, 36, 77)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aeyej"]
 atlas = ExtResource("1_7bxo0")
@@ -46,16 +51,14 @@ margin = Rect2(26, 16, 36, 77)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o0naj"]
 atlas = ExtResource("1_7bxo0")
-region = Rect2(0, 512, 476, 435)
-margin = Rect2(26, 16, 36, 77)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tdk7k"]
-atlas = ExtResource("1_7bxo0")
 region = Rect2(0, 0, 512, 512)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_f207u"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_tdk7k"]
 animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p8ya4")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_masby")
 }, {
@@ -82,22 +85,25 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_o0naj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tdk7k")
 }],
 "loop": 0,
 "name": &"Explosion",
 "speed": 16.0
 }]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f207u"]
+properties/0/path = NodePath(".:animation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:frame")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="Explosion" type="AnimatedSprite2D" unique_id=1885208380]
 position = Vector2(936, 488)
 scale = Vector2(0.46608907, 0.46608907)
-sprite_frames = SubResource("SpriteFrames_f207u")
+sprite_frames = SubResource("SpriteFrames_tdk7k")
 animation = &"Explosion"
-frame = 9
-frame_progress = 1.0
 script = ExtResource("2_p8ya4")
 json_path = "res://Textures/Effects/Explosion.json"
 texture_atlas = ExtResource("1_7bxo0")
@@ -108,5 +114,8 @@ explosion_fps = 16.0
 one_shot = true
 autostart = true
 script = ExtResource("3_p8ya4")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=920386716]
+replication_config = SubResource("SceneReplicationConfig_f207u")
 
 [connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]

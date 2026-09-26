@@ -25,6 +25,7 @@ func find_touch_buttons(current_node: Node) -> void:
 			find_touch_buttons(child)
 
 func _input(event: InputEvent) -> void:
+	
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			active_touches[event.index] = event.position

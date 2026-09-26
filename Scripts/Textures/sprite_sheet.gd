@@ -66,8 +66,6 @@ func _on_filesystem_changed() -> void:
 
 func _update_sprite_frames() -> void:
 	if json_path.is_empty() or not texture_atlas:
-		if not Engine.is_editor_hint():
-			printerr("Please assign both the JSON path and Texture Atlas in the Inspector!")
 		return
 		
 	var new_sprite_frames = parse_spritesheet_json(json_path, texture_atlas, default_fps, _dynamic_properties)

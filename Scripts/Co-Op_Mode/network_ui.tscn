@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://34lxo0i6v7iy"]
+
+[ext_resource type="Script" uid="uid://bdcopiu8sivws" path="res://Scripts/Co-Op_Mode/network_ui.gd" id="1_pkr8v"]
+
+[node name="NetworkUI" type="Control" unique_id=1570128733]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pkr8v")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2024802963]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -136.0
+offset_right = 136.0
+offset_bottom = 238.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="HOST" type="Button" parent="VBoxContainer" unique_id=628148764]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 32
+text = "HOST
+"
+
+[node name="JOIN" type="Button" parent="VBoxContainer" unique_id=1787750810]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 32
+text = "JOIN"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=179600590]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -70.99994
+offset_top = 136.00002
+offset_right = 201.0
+offset_bottom = 374.0
+grow_horizontal = 2
+scale = Vector2(0.51958716, 0.51958716)
+alignment = 1
+
+[node name="InputCode" type="LineEdit" parent="VBoxContainer2" unique_id=372285730]
+layout_mode = 2
+focus_mode = 1
+theme_override_font_sizes/font_size = 32
+placeholder_text = "ServerCode"
+alignment = 1
+
+[node name="ServerCode" type="Label" parent="." unique_id=1546394496]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -139.0
+offset_top = 6.0
+offset_right = 138.0
+offset_bottom = 55.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 35
+text = "ServerCode: N/A"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/HOST" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="VBoxContainer/JOIN" to="." method="_on_join_pressed"]
