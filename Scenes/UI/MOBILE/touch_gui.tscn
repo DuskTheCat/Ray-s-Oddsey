@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cjca7s7iijur0" path="res://Textures/Buttons/Mobile/Up.png" id="3_mvv3m"]
 [ext_resource type="Texture2D" uid="uid://eed71ijdqymm" path="res://Textures/Buttons/Mobile/Sprint.png" id="4_idwye"]
 [ext_resource type="Texture2D" uid="uid://it04cr66sbpk" path="res://Textures/Buttons/Mobile/Dash.png" id="6_mvv3m"]
+[ext_resource type="Texture2D" uid="uid://c30lthqkdkkn1" path="res://Textures/Buttons/Mobile/Punch.png" id="7_idwye"]
 
 [sub_resource type="GDScript" id="GDScript_u8wbt"]
 script/source = "extends Control
@@ -228,4 +229,17 @@ scale = Vector2(0.59375, 0.59375)
 texture_normal = ExtResource("6_mvv3m")
 shape = SubResource("CircleShape2D_xhsim")
 action = "Dash"
+visibility_mode = 1
+
+[node name="Punch" type="Node2D" parent="BottomRight" unique_id=1222810649]
+position = Vector2(-390.99683, -238.5852)
+script = ExtResource("2_mvv3m")
+metadata/_edit_group_ = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="BottomRight/Punch" unique_id=2019648460]
+position = Vector2(-76, -76)
+scale = Vector2(0.59375, 0.59375)
+texture_normal = ExtResource("7_idwye")
+shape = SubResource("CircleShape2D_xhsim")
+action = "Punch"
 visibility_mode = 1
