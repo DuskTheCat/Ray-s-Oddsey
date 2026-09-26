@@ -35,7 +35,7 @@ func _on_join_pressed() -> void:
 func _on_room_code_generated(code: String) -> void:
 	# ONLY the server should handle room code creation and initial host spawning
 	if multiplayer.is_server():
-		server_code.text = "ServerCode: " + code
+		server_code.text = "ServerCode: " + code + " (local if same network)"
 		multiplayer_spawner.spawn_host()
 		
 
