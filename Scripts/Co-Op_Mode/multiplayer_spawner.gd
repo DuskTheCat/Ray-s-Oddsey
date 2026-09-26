@@ -1,6 +1,7 @@
 extends MultiplayerSpawner
 
 @export var network_player: PackedScene
+@export var Spawn_Node: Node2D
 
 func _ready() -> void:
 	# Set Godot's custom spawn function for this spawner
@@ -15,6 +16,7 @@ func _ready() -> void:
 # Custom spawn method used internally by Godot's MultiplayerSpawner
 func _custom_spawn(data: Dictionary) -> Node:
 	var player = network_player.instantiate()
+	player.gobal_position = Spawn_Node.global_position
 	player.name = str(data["id"])
 	return player
 

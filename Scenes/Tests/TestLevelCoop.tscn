@@ -284,12 +284,29 @@ shape = SubResource("RectangleShape2D_ykv2e")
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1954018795]
 _spawnable_scenes = PackedStringArray("uid://b22bq3qyfh1b6", "uid://b40tmrjat0rwd")
 spawn_path = NodePath("..")
+spawn_limit = 2
 script = ExtResource("4_bbdmo")
 network_player = ExtResource("5_rpbxn")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=354242175]
 
 [node name="NetworkUI" parent="CanvasLayer" unique_id=1570128733 instance=ExtResource("6_x4lpi")]
+
+[node name="HOST" parent="CanvasLayer/NetworkUI/VBoxContainer" parent_id_path=PackedInt32Array(1570128733, 2024802963) index="0" unique_id=628148764]
+text = "HOST
+"
+
+[node name="VBoxContainer2" parent="CanvasLayer/NetworkUI" index="1" unique_id=179600590]
+offset_left = -70.99994
+offset_top = 136.00002
+offset_right = 201.0
+offset_bottom = 374.0
+scale = Vector2(0.51958716, 0.51958716)
+mouse_filter = 1
+
+[node name="InputCode" parent="CanvasLayer/NetworkUI/VBoxContainer2" index="0" unique_id=372285730]
+max_length = 0
+select_all_on_focus = false
 
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/HOST" to="CanvasLayer" method="_on_host_pressed"]
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/JOIN" to="CanvasLayer" method="_on_join_pressed"]

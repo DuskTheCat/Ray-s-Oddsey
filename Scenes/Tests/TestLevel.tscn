@@ -180,10 +180,10 @@ script = ExtResource("1_ori7k")
 player_scene = ExtResource("1_w7ufb")
 
 [node name="Floor" type="ColorRect" parent="." unique_id=1178098634]
-offset_left = -532.0
-offset_top = 996.0
-offset_right = 498.0
-offset_bottom = 1110.0
+offset_left = -493.0
+offset_top = 206.0
+offset_right = 537.0
+offset_bottom = 320.0
 color = Color(0.080783345, 0.080783345, 0.080783345, 1)
 metadata/_edit_group_ = true
 
@@ -194,10 +194,10 @@ position = Vector2(515, 57.5)
 shape = SubResource("RectangleShape2D_xhsim")
 
 [node name="Floor2" type="ColorRect" parent="." unique_id=528788995]
-offset_left = 487.0
-offset_top = 817.0
-offset_right = 1517.0
-offset_bottom = 1110.0
+offset_left = 526.0
+offset_top = 27.0
+offset_right = 1556.0
+offset_bottom = 320.0
 color = Color(0.080783345, 0.080783345, 0.080783345, 1)
 metadata/_edit_group_ = true
 
@@ -208,10 +208,10 @@ position = Vector2(515, 146)
 shape = SubResource("RectangleShape2D_w7ufb")
 
 [node name="Floor3" type="ColorRect" parent="." unique_id=136936167]
-offset_left = 1090.0
-offset_top = 566.0
-offset_right = 1517.0
-offset_bottom = 818.0
+offset_left = 1129.0
+offset_top = -224.0
+offset_right = 1556.0
+offset_bottom = 28.0
 color = Color(0.080783345, 0.080783345, 0.080783345, 1)
 metadata/_edit_group_ = true
 
@@ -222,7 +222,7 @@ position = Vector2(213.5, 127)
 shape = SubResource("RectangleShape2D_bd0oy")
 
 [node name="Ledges" type="Node2D" parent="." unique_id=2135229703]
-position = Vector2(-580, 528)
+position = Vector2(-541, -262)
 
 [node name="Ledge" type="Area2D" parent="Ledges" unique_id=756698900 groups=["Ledge"]]
 position = Vector2(1092, 297)
@@ -283,8 +283,10 @@ metadata/_edit_group_ = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge3" unique_id=1985980486]
 shape = SubResource("RectangleShape2D_ykv2e")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1954018795]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1954018795 node_paths=PackedStringArray("Spawn_Node")]
 _spawnable_scenes = PackedStringArray("uid://b22bq3qyfh1b6", "uid://b40tmrjat0rwd")
 spawn_path = NodePath("..")
+spawn_limit = 1
 script = ExtResource("5_1wgvv")
 network_player = ExtResource("1_w7ufb")
+Spawn_Node = NodePath("")

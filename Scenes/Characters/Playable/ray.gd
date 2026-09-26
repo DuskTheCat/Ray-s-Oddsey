@@ -72,13 +72,20 @@ var extend_tween: Tween
 var modulate_tween: Tween
 var last_direction: float = 0.0
 
-
-
 # --- Built-in Lifecycle Methods ---
 @onready var fire_bar_container: Control = $UI/SafeScreen/FireBar
 @onready var fire_bar: TextureProgressBar = $UI/SafeScreen/FireBar/TextureProgressBar2
 @onready var ui: CanvasLayer = $UI
 
+@export_group("Stats")
+@export var Health : float = 100.0:
+	set(value):
+		Health = value
+		health_bar.value = value
+@export var Max_Health : float = 100.0
+
+@onready var health_bar_container: Control = $UI/SafeScreen/HealthBar
+@onready var health_bar: TextureProgressBar = $UI/SafeScreen/HealthBar/TextureProgressBar2
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -382,3 +389,10 @@ func _on_fire_fill_timeout() -> void:
 	if not is_multiplayer_authority(): return
 	if fire < 100:
 		fire += 0.5
+		
+
+func damage(value: float) -> void:
+	Health = max(Health - value, 0.0)
+
+func heal(value: float) -> void:
+	Health = min(Health + value, Max_Health)

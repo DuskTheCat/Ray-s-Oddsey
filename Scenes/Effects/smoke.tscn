@@ -51,6 +51,7 @@ lifetime = 0.5
 use_fixed_seed = true
 seed = 3243190500
 fixed_fps = 60
+visibility_rect = Rect2(-200, -200, 200, 200)
 process_material = SubResource("ParticleProcessMaterial_xhsim")
 script = ExtResource("3_4qjyl")
 
@@ -62,6 +63,7 @@ lifetime = 0.5
 use_fixed_seed = true
 seed = 3792244613
 fixed_fps = 60
+visibility_rect = Rect2(-200, -200, 200, 200)
 process_material = SubResource("ParticleProcessMaterial_ngwbn")
 script = ExtResource("3_4qjyl")
 

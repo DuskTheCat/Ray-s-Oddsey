@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dwdt41ldf5loy"
-path.s3tc="res://.godot/imported/Ray.png-868d9591b634f860dd511671d91452f4.s3tc.ctex"
+uid="uid://bkkwv2wdo8x2f"
+path="res://.godot/imported/Bar.png-31e9fa8653b6feeda4d49d23235e4a17.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/Characters/Ray/Ray.png"
-dest_files=["res://.godot/imported/Ray.png-868d9591b634f860dd511671d91452f4.s3tc.ctex"]
+source_file="res://Scenes/UI/Ray/HealthBar/Bar.png"
+dest_files=["res://.godot/imported/Bar.png-31e9fa8653b6feeda4d49d23235e4a17.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
