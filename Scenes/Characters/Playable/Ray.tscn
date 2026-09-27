@@ -368,7 +368,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4byy4")
 }, {
-"duration": 1.0,
+"duration": 10000.0,
 "texture": SubResource("AtlasTexture_tnnpd")
 }],
 "loop": 0,
@@ -580,7 +580,7 @@ properties/12/path = NodePath("Smoke/Smoke2:position")
 properties/12/spawn = true
 properties/12/replication_mode = 1
 
-[node name="Ray" type="CharacterBody2D" unique_id=1788415153 groups=["Entity"]]
+[node name="Ray" type="CharacterBody2D" unique_id=1788415153 groups=["Entity", "Player"]]
 script = ExtResource("1_6v2m8")
 
 [node name="SpritePlaceHolder" type="ColorRect" parent="." unique_id=2105916372]
@@ -720,7 +720,7 @@ position = Vector2(0.99999034, -6.0000086)
 scale = Vector2(0.36248603, 0.36248603)
 sprite_frames = SubResource("SpriteFrames_c88b8")
 animation = &"Fall"
-frame_progress = 0.9715916
+frame_progress = 0.66161114
 offset = Vector2(-1.2912111, -2.758667)
 
 [node name="LedgeDetecorArea" type="Area2D" parent="." unique_id=1553771975]

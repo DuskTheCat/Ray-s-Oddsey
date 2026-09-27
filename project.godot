@@ -44,6 +44,7 @@ enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg", "r
 
 Ledge="An area that is considered a ledge."
 Entity="Nodes which are alive and can die or damaged or healed."
+Player="Characters which can be, or is controlled by a Player."
 
 [input]
 
