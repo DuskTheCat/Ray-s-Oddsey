@@ -16,7 +16,6 @@ func _ready() -> void:
 # Custom spawn method used internally by Godot's MultiplayerSpawner
 func _custom_spawn(data: Dictionary) -> Node:
 	var player = network_player.instantiate()
-	
 	# Fallback to local position if Spawn_Node isn't set
 	if Spawn_Node:
 		player.global_position = Spawn_Node.global_position

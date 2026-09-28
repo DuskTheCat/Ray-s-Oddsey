@@ -2,22 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dwdt41ldf5loy"
-path.s3tc="res://.godot/imported/Ray.png-868d9591b634f860dd511671d91452f4.s3tc.ctex"
-path.etc2="res://.godot/imported/Ray.png-868d9591b634f860dd511671d91452f4.etc2.ctex"
+uid="uid://mauovob84ryo"
+path="res://.godot/imported/Test.png-a6d17031e6cbbee505a0e7bf490eee03.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/Characters/Ray/Ray.png"
-dest_files=["res://.godot/imported/Ray.png-868d9591b634f860dd511671d91452f4.s3tc.ctex", "res://.godot/imported/Ray.png-868d9591b634f860dd511671d91452f4.etc2.ctex"]
+source_file="res://Textures/TileSets/Test.png"
+dest_files=["res://.godot/imported/Test.png-a6d17031e6cbbee505a0e7bf490eee03.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

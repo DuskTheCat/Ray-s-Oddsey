@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cbd6g0cow6dyj" path="res://Textures/Effects/Explosion.png" id="1_7bxo0"]
 [ext_resource type="Script" uid="uid://sycfu03cj072" path="res://Scripts/Reusable/AutoAnimation2D.gd" id="2_p8ya4"]
 [ext_resource type="Script" uid="uid://cy4x5vqvqwonq" path="res://Scripts/Reusable/DeletionTimer.gd" id="3_p8ya4"]
+[ext_resource type="Script" uid="uid://bdicsbovv3acl" path="res://Scripts/random/explosion_damage.gd" id="4_masby"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_masby"]
 atlas = ExtResource("1_7bxo0")
@@ -92,18 +93,16 @@ animations = [{
 }]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f207u"]
-properties/0/path = NodePath(".:animation")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:frame")
-properties/1/spawn = true
-properties/1/replication_mode = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xhsim"]
+radius = 267.2
 
 [node name="Explosion" type="AnimatedSprite2D" unique_id=1885208380]
 position = Vector2(936, 488)
 scale = Vector2(0.46608907, 0.46608907)
 sprite_frames = SubResource("SpriteFrames_f207u")
 animation = &"Explosion"
+frame = 4
 script = ExtResource("2_p8ya4")
 animation_to_play = "Explosion"
 
@@ -115,4 +114,12 @@ script = ExtResource("3_p8ya4")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=920386716]
 replication_config = SubResource("SceneReplicationConfig_f207u")
 
+[node name="ExplosionDamage" type="Area2D" parent="." unique_id=1407046238]
+monitorable = false
+script = ExtResource("4_masby")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplosionDamage" unique_id=410789538]
+shape = SubResource("CircleShape2D_xhsim")
+
 [connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
+[connection signal="area_entered" from="ExplosionDamage" to="ExplosionDamage" method="_on_area_entered"]

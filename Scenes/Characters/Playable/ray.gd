@@ -55,7 +55,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var smoke_2: GPUParticles2D = $Smoke/Smoke2
 @onready var camera: Camera2D = $CamPivot/Camera2D
 @onready var camera_pivot: Node2D = $CamPivot
-@onready var sprite: AnimatedSprite2D = $SpriteSheet
+@onready var sprite: AnimatedSprite2D = $SpriteTransformOffset/SpriteSheet
 @onready var ledge_detector_area: Area2D = $LedgeDetecorArea
 @onready var ledge_timeout: Timer = $LedgeTimeout
 @onready var fire_bar_container: Control = $UI/SafeScreen/FireBar
@@ -65,6 +65,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var health_bar: TextureProgressBar = $UI/SafeScreen/HealthBar/TextureProgressBar2
 @onready var punch_timeout: Timer = $PunchTimeout
 @onready var punch_cooldown: Timer = $PunchCooldown
+@onready var punch_hitbox: Area2D = $PunchHitbox
 
 # --- Private / Runtime Variables ---
 var current_speed: float = 1.4
@@ -392,7 +393,7 @@ func _on_fire_fill_timeout() -> void:
 	if fire < 100:
 		fire += 0.5
 
-func damage(value: float) -> void:
+func damage(value: float, origin : Vector2) -> void:
 	Health = max(Health - value, 0.0)
 
 func heal(value: float) -> void:
@@ -418,6 +419,8 @@ func punch() -> void:
 			fire -= 20
 		else:
 			combo_count = 1
+	else:
+		punch_hitbox_activate(0.15)
 	
 	var current_step: int = combo_count
 	override_animations = true
@@ -432,6 +435,22 @@ func punch() -> void:
 		4:
 			play_animation_once("Punch4")
 			_execute_finisher()
+
+func punch_hitbox_activate(linger: float) -> void:
+	print("Hit!")
+	var hitbox : Area2D = punch_hitbox.duplicate()
+	add_child(hitbox)
+	var direction = -1.0 if sprite.flip_h else 1.0
+	if direction < 0:
+		hitbox.scale.x = -1
+	else:
+		hitbox.scale.x = 1
+	hitbox.area_entered.connect(_on_punch_hitbox_area_entered)
+	hitbox.visible = true
+	hitbox.monitorable = true
+	hitbox.monitoring = true
+	await get_tree().create_timer(linger).timeout
+	hitbox.queue_free()
 
 func _execute_finisher() -> void:
 	var timer = get_tree().create_timer(0.1)
@@ -453,3 +472,15 @@ func _on_punch_cooldown_timeout() -> void:
 
 func _on_punch_timeout_timeout() -> void:
 	combo_count = 0
+
+
+func _on_punch_hitbox_area_entered(area: Area2D) -> void:
+	var parent_node = area.get_parent()
+	if parent_node.is_in_group("Entity") and parent_node.is_in_group("Enemy"):
+		if parent_node.has_method("damage"):
+			parent_node.damage(20, global_position, 1, self)
+			print("Hit!")
+			var direction = -1.0 if sprite.flip_h else 1.0
+			velocity.y = -3 * UNIT_SCALE
+			velocity.x = (2 * UNIT_SCALE) * direction
+			
