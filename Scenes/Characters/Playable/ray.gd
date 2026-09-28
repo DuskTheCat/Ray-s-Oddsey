@@ -1,10 +1,11 @@
+class_name PlayerController
 extends CharacterBody2D
 
 # --- Constants & Enums ---
 const UNIT_SCALE: float = 100.0
 const EXPLOSION: PackedScene = preload("res://Scenes/Effects/explosion.tscn")
 
-enum State { NORMAL, CUTSCENE }
+enum State { NORMAL, CUTSCENE, DEAD }
 enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 
 # --- Export Variables ---
@@ -39,14 +40,21 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 			fire_bar.value = value
 @export var punch_dash_speed: float = 5.0
 
+@export_group("Death Impulse")
+@export var death_launch_force: Vector2 = Vector2(4.0, -7.0)
+@export var death_despawn_time: float = 2.0
+
 @export_group("State")
 @export var current_state: State = State.NORMAL
 @export var current_movement_state: MovementState = MovementState.NORMAL
 
-@export_group("Camera")
+@export_group("Camera & Shake")
 @export var smoothness_speed: float = 6.0
 @export var extend_range: float = 2.0
 @export var shortened_extend_range: float = 1.0
+@export var shake_decay: float = 5.0
+@export var max_offset: Vector2 = Vector2(12.0, 8.0)
+@export var max_roll: float = 0.05
 
 # --- Onready Nodes ---
 @onready var fire_fill: Timer = $FireFill
@@ -66,6 +74,8 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var punch_timeout: Timer = $PunchTimeout
 @onready var punch_cooldown: Timer = $PunchCooldown
 @onready var punch_hitbox: Area2D = $PunchHitbox
+@onready var invincibility_timer: Timer = $InvincibilityTimer
+
 
 # --- Private / Runtime Variables ---
 var current_speed: float = 1.4
@@ -81,6 +91,11 @@ var last_direction: float = 0.0
 var combo_count: int = 0
 var can_punch: bool = true
 var old_speed: float = -1.0
+var is_invincible: bool = false
+
+# Shake variables
+var shake_trauma: float = 0.0
+var noise := FastNoiseLite.new()
 
 @export_group("Stats")
 @export var Health: float = 100.0:
@@ -103,10 +118,22 @@ func _ready() -> void:
 	fire = max_fire
 	fire_bar.value = max_fire
 	fire_bar.max_value = max_fire
+	
+	Health = Max_Health
+	if is_instance_valid(health_bar):
+		health_bar.max_value = Max_Health
+		health_bar.value = Max_Health
+		
 	current_speed = walk_speed
 	camera.position_smoothing_speed = smoothness_speed
 	
-	# Connect non-looping animation signals safely
+	# Noise generator setup for procedural screen shake
+	noise.seed = randi()
+	noise.frequency = 0.1
+	
+	if invincibility_timer and not invincibility_timer.timeout.is_connected(_on_invincibility_timer_timeout):
+		invincibility_timer.timeout.connect(_on_invincibility_timer_timeout)
+	
 	if not sprite.animation_finished.is_connected(_on_sprite_animation_finished):
 		sprite.animation_finished.connect(_on_sprite_animation_finished)
 	
@@ -117,6 +144,13 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
+	
+	_process_camera_shake(delta)
+
+	if current_state == State.DEAD:
+		_process_death_movement(delta)
+		return
+
 	if is_on_floor():
 		can_dash = true
 		
@@ -172,33 +206,36 @@ func _physics_process(delta: float) -> void:
 		velocity += (get_gravity() * gravity_multiplier) * delta
 		move_and_slide()
 		
-		if is_on_wall_only() or is_on_ceiling() or (is_on_floor() and not is_ground_dashing):
-			var collision := get_last_slide_collision()
-			if collision:
-				velocity = velocity.bounce(collision.get_normal()) * bounciness
-			if is_on_wall():
-				current_movement_state = MovementState.NORMAL
-				sprite.rotation = 0.0
-				override_animations = false
-				
-		if not is_ground_dashing:
+		# --- IMMEDIATE FLOOR RECOVERY & LANDING LOGIC ---
+		if is_on_floor() and not is_ground_dashing:
+			current_movement_state = MovementState.NORMAL
+			override_animations = false
+			is_air_dash_ragdoll = false
+			sprite.rotation = 0.0
+			set_smoke_emitting(false)
+		else:
+			if is_on_wall_only() or is_on_ceiling():
+				var collision := get_last_slide_collision()
+				if collision:
+					velocity = velocity.bounce(collision.get_normal()) * bounciness
+				if is_on_wall():
+					current_movement_state = MovementState.NORMAL
+					sprite.rotation = 0.0
+					override_animations = false
+					
 			var friction_reduction := (deceleration if is_on_floor() else air_deceleration) * physics_friction
 			velocity.x = move_toward(velocity.x, 0.0, friction_reduction * delta)
 			
-		update_animation()
-		
-		if is_on_floor() and not is_ground_dashing:
-			override_animations = false
-			sprite.rotation = 0.0
-			if is_air_dash_ragdoll:
-				is_air_dash_ragdoll = false
+			if abs(velocity.x) < 0.5 * UNIT_SCALE:
 				current_movement_state = MovementState.NORMAL
-		elif not is_ground_dashing and abs(velocity.x) < 0.5 * UNIT_SCALE:
-			current_movement_state = MovementState.NORMAL
-			set_smoke_emitting(false)
+				override_animations = false
+				sprite.rotation = 0.0
+				set_smoke_emitting(false)
+				
+		update_animation()
 
 func _input(event: InputEvent) -> void:
-	if not is_multiplayer_authority():
+	if not is_multiplayer_authority() or current_state == State.DEAD:
 		return
 
 	if current_movement_state == MovementState.PHYSICS_OBJECT and not is_ground_dashing:
@@ -219,7 +256,7 @@ func _input(event: InputEvent) -> void:
 
 # --- Animation Handling ---
 func update_animation() -> void:
-	if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority() or current_state == State.DEAD: return
 	if override_animations:
 		return
 		
@@ -230,10 +267,8 @@ func update_animation() -> void:
 			else:
 				sprite.play("Walk" if abs(velocity.x) < (1.9 * UNIT_SCALE) else "Run")
 		else:
-			# Jump and Fall are treated as loops/continuous states here
 			sprite.play("Jump" if velocity.y < 0 else "Fall")
 	elif current_movement_state == MovementState.ON_LEDGE:
-		# Ledge grab played as non-looping single trigger
 		play_animation_once("LedgeGrab")
 	elif current_movement_state == MovementState.PHYSICS_OBJECT:
 		var hurt_anim := "Hurt" if sprite.sprite_frames.has_animation("Hurt") else "Fall"
@@ -244,7 +279,8 @@ func play_animation_once(anim_name: StringName) -> void:
 		sprite.play(anim_name)
 
 func _on_sprite_animation_finished() -> void:
-	# Release animation override when one-shot animations finish playing
+	if current_state == State.DEAD:
+		return
 	match sprite.animation:
 		"Hurt", "Punch1", "Punch2", "Punch3", "Punch4", "LedgeGrab", "Dash":
 			if current_movement_state == MovementState.NORMAL:
@@ -269,6 +305,9 @@ func dash() -> void:
 		play_animation_once("Jump")
 		set_smoke_emitting(true)
 		
+		# Upward air dash gives 0.5x duration
+		grant_invincibility(0.067)
+		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
 		get_tree().create_timer(0.3).timeout.connect(func():
 			if modulate_tween and modulate_tween.is_running(): modulate_tween.kill()
@@ -286,6 +325,9 @@ func dash() -> void:
 		apply_physics_impulse(launch_vector, false)
 		override_animations = true
 		play_animation_once("Dash")
+		
+		# Ground dash gives full 1.0x duration from Inspector timer
+		grant_invincibility(0.067)
 		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
 		
@@ -324,6 +366,9 @@ func dash() -> void:
 		launch_vector = Vector2(ground_dash_direction * dash_velocity, 0.0)
 		apply_physics_impulse(launch_vector, true)
 		
+		# Horizontal air dash gives 0.5x duration
+		grant_invincibility(0.5)
+		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
 		
 		if modulate_tween and modulate_tween.is_running(): modulate_tween.kill()
@@ -350,6 +395,119 @@ func exit_ledge() -> void:
 	ledge_timeout.start()
 	current_movement_state = MovementState.NORMAL
 	velocity.y = jump_velocity * UNIT_SCALE
+
+# --- Camera Shake System ---
+func apply_shake(amount: float) -> void:
+	shake_trauma = clamp(shake_trauma + amount, 0.0, 1.0)
+
+func _process_camera_shake(delta: float) -> void:
+	if not is_instance_valid(camera) or shake_trauma <= 0.0:
+		if is_instance_valid(camera):
+			camera.offset = Vector2.ZERO
+			camera.rotation = 0.0
+		return
+
+	shake_trauma = max(shake_trauma - shake_decay * delta, 0.0)
+	var amount := shake_trauma * shake_trauma  # Exponential curve for smoother decay
+	
+	var time := Time.get_ticks_msec() * 0.05
+	var offset_x := max_offset.x * amount  * noise.get_noise_2d(time, 0.0)
+	var offset_y := max_offset.y * amount  * noise.get_noise_2d(0.0, time)
+	
+	camera.offset = Vector2(offset_x, offset_y)
+	camera.rotation = max_roll * amount * noise.get_noise_2d(time, time)
+
+# --- Damage, Invincibility & Death Implementation ---
+@rpc("any_peer", "call_local", "reliable")
+func request_damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: float = 1.0) -> void:
+	if not is_multiplayer_authority() or current_state == State.DEAD:
+		return
+	damage(value, origin, velocity_multiplier)
+
+func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: float = 1.0) -> void:
+	if current_state == State.DEAD or is_invincible:
+		return
+
+	Health = max(Health - value, 0.0)
+	_play_hit_flash.rpc()
+	apply_shake(400)
+
+	if Health <= 0.0:
+		_sync_die.rpc(origin)
+	elif origin != Vector2.ZERO:
+		var dir_x := 1.0 if origin.x < global_position.x else -1.0
+		apply_physics_impulse(Vector2(4.0 * dir_x * velocity_multiplier, -3.0 * velocity_multiplier))
+		
+		# Taking damage grants full 1.0x duration configured on the InvincibilityTimer inspector node
+		grant_invincibility(1.0)
+
+func grant_invincibility(multiplier: float = 1.0) -> void:
+	if is_invincible or not invincibility_timer:
+		return
+		
+	is_invincible = true
+	var duration: float = invincibility_timer.wait_time * multiplier
+	
+	invincibility_timer.start(duration)
+		
+	if sprite:
+		var flash_tween := create_tween().set_loops(max(1, int(duration / 0.1)))
+		flash_tween.tween_property(sprite, "modulate:a", 0.3, 0.05)
+		flash_tween.tween_property(sprite, "modulate:a", 1.0, 0.05)
+
+func _on_invincibility_timer_timeout() -> void:
+	is_invincible = false
+	if sprite:
+		sprite.modulate.a = 1.0
+
+func heal(value: float) -> void:
+	if current_state == State.DEAD:
+		return
+	Health = min(Health + value, Max_Health)
+
+@rpc("authority", "call_local", "reliable")
+func _play_hit_flash() -> void:
+	if sprite:
+		if modulate_tween and modulate_tween.is_running():
+			modulate_tween.kill()
+		sprite.self_modulate = Color.RED
+		modulate_tween = create_tween()
+		modulate_tween.tween_property(sprite, "self_modulate", Color.WHITE, 3)
+
+@rpc("authority", "call_local", "reliable")
+func _sync_die(origin: Vector2 = Vector2.ZERO) -> void:
+	die(origin)
+
+func die(origin: Vector2 = Vector2.ZERO) -> void:
+	current_state = State.DEAD
+	override_animations = true
+	set_smoke_emitting(false)
+
+	set_collision_layer_value(1, false)
+	set_collision_mask_value(1, false)
+
+	var dir_x: float = 0.0
+	if origin != Vector2.ZERO:
+		dir_x = 1.0 if origin.x < global_position.x else -1.0
+	else:
+		dir_x = -1.0 if sprite and sprite.flip_h else 1.0
+
+	velocity = Vector2(death_launch_force.x * dir_x, death_launch_force.y) * UNIT_SCALE
+
+	if sprite:
+		var death_anim := "Ragdoll" if sprite.sprite_frames.has_animation("Ragdoll") else "Hurt"
+		sprite.play(death_anim)
+
+	var fade_tween := create_tween()
+	fade_tween.tween_property(self, "modulate:a", 0.0, death_despawn_time).set_delay(death_despawn_time * 0.5)
+	fade_tween.tween_callback(queue_free)
+
+func _process_death_movement(delta: float) -> void:
+	if not is_on_floor():
+		velocity += (get_gravity() * gravity_multiplier) * delta
+	else:
+		velocity.x = move_toward(velocity.x, 0.0, deceleration * UNIT_SCALE * delta)
+	move_and_slide()
 
 # --- Helper Methods ---
 @rpc("any_peer", "call_local", "reliable")
@@ -379,7 +537,7 @@ func update_camera_extent(dir: float) -> void:
 
 # --- Signal Connections ---
 func _on_ledge_detecor_area_area_entered(area: Area2D) -> void:
-	if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority() or current_state == State.DEAD: return
 	if current_movement_state == MovementState.PHYSICS_OBJECT or current_movement_state == MovementState.ON_LEDGE or not ledge_timeout.is_stopped():
 		return
 		
@@ -393,15 +551,9 @@ func _on_fire_fill_timeout() -> void:
 	if fire < 100:
 		fire += 0.5
 
-func damage(value: float, origin : Vector2) -> void:
-	Health = max(Health - value, 0.0)
-
-func heal(value: float) -> void:
-	Health = min(Health + value, Max_Health)
-
 # --- Punch Implementation ---
 func punch() -> void:
-	if not can_punch:
+	if not can_punch or current_state == State.DEAD:
 		return
 		
 	can_punch = false
@@ -473,14 +625,13 @@ func _on_punch_cooldown_timeout() -> void:
 func _on_punch_timeout_timeout() -> void:
 	combo_count = 0
 
-
 func _on_punch_hitbox_area_entered(area: Area2D) -> void:
 	var parent_node = area.get_parent()
 	if parent_node.is_in_group("Entity") and parent_node.is_in_group("Enemy"):
 		if parent_node.has_method("damage"):
 			parent_node.damage(20, global_position, 1, self)
+			apply_shake(100) # Adds screen shake when damaging an enemy
 			print("Hit!")
 			var direction = -1.0 if sprite.flip_h else 1.0
 			velocity.y = -3 * UNIT_SCALE
 			velocity.x = (2 * UNIT_SCALE) * direction
-			

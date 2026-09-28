@@ -8,6 +8,9 @@ const EXPLOSION: PackedScene = preload("res://Scenes/Effects/explosion.tscn")
 enum State { IDLE, PATROL, CHASE, ATTACK, STUNNED, DEAD }
 enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 
+@export_group("Spawn Settings")
+@export_enum("Right:1", "Left:-1") var initial_facing_direction: int = 1
+
 @export_group("AI")
 @export var Target: CharacterBody2D
 @export var target_scene: PackedScene
@@ -25,9 +28,14 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var air_deceleration: float = 5.0
 
 @export_group("Combat & Physics")
-@export var max_health: float = 100.0
+@export var max_health: float = 200.0
+@export var min_health: float = 100.0
+@export var attack_damage: float = 15.0
+@export var attack_cooldown_time: float = 1.0
+@export var punch_windup_time: float = 0.5
 @export var bounciness: float = 0.35
 @export var physics_friction: float = 10.0
+@export var hit_camera_shake: float = 0.35
 
 @export_group("Death Impulse")
 @export var death_launch_force: Vector2 = Vector2(5.0, -8.0)
@@ -38,21 +46,25 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var current_state: State = State.IDLE
 @export var current_movement_state: MovementState = MovementState.NORMAL
 
-# --- AI Input Targets ---
+# --- AI Input Targets (Synced) ---
 var move_direction: float = 0.0
 var wants_to_run: bool = false
 
 # --- Runtime Variables ---
-var health: float = 100.0
+var health: float = 100
 var current_speed: float = 1.4
 var override_animations: bool = false
 var modulate_tween: Tween
 var death_angular_velocity: float = 0.0
 var is_landing_settled: bool = false
 var is_jumping_detour: bool = false
+var can_punch: bool = true
+var is_punching: bool = false
 
 # --- Aggro System ---
 var last_attacker: CharacterBody2D = null
+var targets_in_sight: Array[CharacterBody2D] = []
+var targets_in_punch_range: Array[CharacterBody2D] = []
 
 # --- Advanced Link & Platform Traversal ---
 var is_traversing_link: bool = false
@@ -71,21 +83,47 @@ var link_target_velocity_x: float = 0.0
 @onready var ledge_check: Node2D = $LedgeCheck
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 
+@onready var sight: Area2D = $Sight
+@onready var ray_cast_2d: RayCast2D = $RayCast2D
+
+@onready var punch_hitbox: Area2D = $PunchHitbox
+@onready var punch_range_area: Area2D = $PunchHitbox
+
+@onready var stun_time: Timer = $StunTime
+
+
 func _enter_tree() -> void:
-	# Server runs AI logic and authority calculations
 	set_multiplayer_authority(1)
 
 func _ready() -> void:
-	health = max_health
+	_apply_initial_facing_direction()
+	health = randf_range(min_health, max_health)
 	
 	if sprite and not sprite.animation_finished.is_connected(_on_sprite_animation_finished):
 		sprite.animation_finished.connect(_on_sprite_animation_finished)
 		
-	# Server handles AI state and navigation initialization
+	if sight:
+		if not sight.body_entered.is_connected(_on_sight_body_entered):
+			sight.body_entered.connect(_on_sight_body_entered)
+		if not sight.body_exited.is_connected(_on_sight_body_exited):
+			sight.body_exited.connect(_on_sight_body_exited)
+
+	if punch_range_area:
+		if not punch_range_area.body_entered.is_connected(_on_punch_range_body_entered):
+			punch_range_area.body_entered.connect(_on_punch_range_body_entered)
+		if not punch_range_area.body_exited.is_connected(_on_punch_range_body_exited):
+			punch_range_area.body_exited.connect(_on_punch_range_body_exited)
+
+	if stun_time:
+		if not stun_time.timeout.is_connected(_on_stun_timeout):
+			stun_time.timeout.connect(_on_stun_timeout)
+
+	if ray_cast_2d:
+		ray_cast_2d.add_exception(self)
+
 	if multiplayer.is_server():
-		current_state = State.CHASE
-		var items = [run_speed, walk_speed]
-		current_speed = items.pick_random()
+		current_state = State.IDLE
+		current_speed = walk_speed
 
 		if navigation_agent_2d:
 			if not navigation_agent_2d.link_reached.is_connected(_on_navigation_agent_2d_link_reached):
@@ -97,10 +135,37 @@ func _ready() -> void:
 			
 		call_deferred("actor_setup")
 
+func _apply_initial_facing_direction() -> void:
+	var is_left: bool = (initial_facing_direction == -1)
+	if sprite:
+		sprite.flip_h = is_left
+		
+	var dir_sign: float = float(initial_facing_direction)
+	if wall_check:
+		wall_check.scale.x = dir_sign
+	if ledge_check:
+		ledge_check.scale.x = dir_sign
+	if sight:
+		sight.scale.x = dir_sign
+
+func _update_facing_orientation(dir_x: float) -> void:
+	if dir_x == 0.0:
+		return
+	var is_left: bool = (dir_x < 0.0)
+	if sprite:
+		sprite.flip_h = is_left
+		
+	var dir_sign: float = -1.0 if is_left else 1.0
+	if wall_check:
+		wall_check.scale.x = dir_sign
+	if ledge_check:
+		ledge_check.scale.x = dir_sign
+	if sight:
+		sight.scale.x = dir_sign
+
 func actor_setup() -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	
 	if is_instance_valid(Target) and navigation_agent_2d:
 		navigation_agent_2d.target_position = Target.global_position
 
@@ -139,24 +204,24 @@ func _try_find_target() -> void:
 func _on_node_added(node: Node) -> void:
 	if is_instance_valid(Target):
 		return
-
 	if node is CharacterBody2D and node.is_in_group("Player"):
 		_try_find_target()
 		if is_instance_valid(Target) and get_tree().node_added.is_connected(_on_node_added):
 			get_tree().node_added.disconnect(_on_node_added)
 
 func _physics_process(delta: float) -> void:
-	# CLIENT: Sync animations/sprite flipping locally based on server state
 	if not multiplayer.is_server():
 		update_animation()
-		if sprite and move_direction != 0.0:
-			sprite.flip_h = move_direction < 0.0
+		if move_direction != 0.0:
+			_update_facing_orientation(move_direction)
 		return
 
-	# SERVER: Full AI, State, and Physics processing
 	if current_state == State.DEAD:
 		_process_death_movement(delta)
 		return
+
+	_check_line_of_sight()
+	_check_punch_range()
 
 	match current_movement_state:
 		MovementState.NORMAL:
@@ -166,17 +231,146 @@ func _physics_process(delta: float) -> void:
 		MovementState.PHYSICS_OBJECT:
 			_process_physics_object_movement(delta)
 
+# --- Perception & Vision System ---
+func _on_sight_body_entered(body: Node2D) -> void:
+	if body is CharacterBody2D and body.is_in_group("Player"):
+		if not targets_in_sight.has(body):
+			targets_in_sight.append(body as CharacterBody2D)
+
+func _on_sight_body_exited(body: Node2D) -> void:
+	if body is CharacterBody2D and targets_in_sight.has(body):
+		targets_in_sight.erase(body)
+
+func _check_line_of_sight() -> void:
+	if targets_in_sight.is_empty() or not ray_cast_2d:
+		return
+
+	targets_in_sight = targets_in_sight.filter(func(b): return is_instance_valid(b))
+
+	for potential_target in targets_in_sight:
+		ray_cast_2d.global_position = global_position
+		ray_cast_2d.target_position = ray_cast_2d.to_local(potential_target.global_position)
+		ray_cast_2d.force_raycast_update()
+
+		if ray_cast_2d.is_colliding():
+			var collider := ray_cast_2d.get_collider()
+			if collider == potential_target:
+				Target = potential_target
+				if current_state != State.ATTACK and current_state != State.STUNNED:
+					current_state = State.CHASE
+				break
+
+# --- Punch Detection & Attack Logic ---
+func _on_punch_range_body_entered(body: Node2D) -> void:
+	if body is CharacterBody2D and body.is_in_group("Player"):
+		if not targets_in_punch_range.has(body):
+			targets_in_punch_range.append(body as CharacterBody2D)
+
+func _on_punch_range_body_exited(body: Node2D) -> void:
+	if body is CharacterBody2D and targets_in_punch_range.has(body):
+		targets_in_punch_range.erase(body)
+
+func _check_punch_range() -> void:
+	if current_state == State.STUNNED or current_state == State.DEAD:
+		return
+
+	targets_in_punch_range = targets_in_punch_range.filter(func(b): return is_instance_valid(b))
+	
+	if not targets_in_punch_range.is_empty():
+		Target = targets_in_punch_range[0]
+		if can_punch and not is_punching:
+			punch()
+	elif current_state == State.ATTACK and not is_punching:
+		current_state = State.CHASE if is_instance_valid(Target) else State.IDLE
+
+func punch() -> void:
+	if not can_punch or is_punching or current_state == State.STUNNED or current_state == State.DEAD:
+		return
+
+	can_punch = false
+	is_punching = true
+	current_state = State.ATTACK
+	move_direction = 0.0
+
+	# Turn to face target during wind-up
+	if is_instance_valid(Target):
+		var face_dir: float = Target.global_position.x - global_position.x
+		_update_facing_orientation(face_dir)
+
+	# --- 1. WIND-UP PHASE ---
+	override_animations = true
+	play_animation_once("Idle")
+	await get_tree().create_timer(punch_windup_time).timeout
+
+	if current_state == State.STUNNED or current_state == State.DEAD:
+		_reset_attack_state()
+		return
+
+	# Re-face target before delivering punch
+	if is_instance_valid(Target):
+		var face_dir: float = Target.global_position.x - global_position.x
+		_update_facing_orientation(face_dir)
+
+	# --- 2. EXECUTE PUNCH ---
+	play_animation_once("Punch1")
+	punch_hitbox_activate(0.2)
+
+	# --- 3. COOLDOWN PHASE ---
+	await get_tree().create_timer(attack_cooldown_time).timeout
+	_reset_attack_state()
+
+func _reset_attack_state() -> void:
+	can_punch = true
+	is_punching = false
+	if current_state == State.ATTACK:
+		override_animations = false
+		current_state = State.CHASE if is_instance_valid(Target) else State.IDLE
+
+func punch_hitbox_activate(linger: float) -> void:
+	if not is_instance_valid(punch_hitbox):
+		return
+		
+	var hitbox: Area2D = punch_hitbox.duplicate()
+	add_child(hitbox)
+	
+	var direction: float = -1.0 if (sprite and sprite.flip_h) else 1.0
+	hitbox.scale.x = direction
+	hitbox.area_entered.connect(_on_punch_hitbox_area_entered)
+	hitbox.visible = true
+	hitbox.monitorable = true
+	hitbox.monitoring = true
+	
+	await get_tree().create_timer(linger).timeout
+	if is_instance_valid(hitbox):
+		hitbox.queue_free()
+
+func _on_punch_hitbox_area_entered(area: Area2D) -> void:
+	var parent_node := area.get_parent()
+	if parent_node and parent_node.is_in_group("Player"):
+		if parent_node.has_method("damage"):
+			parent_node.damage(attack_damage, global_position, 1.0)
+			_trigger_camera_shake(parent_node)
+
+func _trigger_camera_shake(target_node: Node) -> void:
+	if target_node and target_node.has_method("apply_shake"):
+		target_node.apply_shake(hit_camera_shake)
+
 # --- Movement Processing ---
 func _process_normal_movement(delta: float) -> void:
 	set_smoke_emitting(false)
 	
-	_process_ai_navigation()
+	if current_state == State.ATTACK or current_state == State.STUNNED:
+		move_direction = 0.0
+	else:
+		_process_ai_navigation()
 	
-	if velocity.x != 0.0:
-		var dir_sign: float = sign(velocity.x)
-		wall_check.scale.x = -dir_sign
-		ledge_check.scale.x = -dir_sign
-	
+	if current_state != State.ATTACK:
+		if move_direction != 0.0:
+			_update_facing_orientation(move_direction)
+		elif is_instance_valid(Target) and current_state == State.CHASE:
+			var target_dir: float = Target.global_position.x - global_position.x
+			_update_facing_orientation(target_dir)
+
 	if not is_on_floor():
 		velocity += (get_gravity() * gravity_multiplier) * delta
 		
@@ -191,9 +385,6 @@ func _process_normal_movement(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, move_direction * target_speed, accel * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, deccel * delta)
-		
-	if sprite and move_direction != 0.0:
-		sprite.flip_h = move_direction < 0.0
 
 	move_and_slide()
 	update_animation()
@@ -203,13 +394,15 @@ func _process_ai_navigation() -> void:
 	if not is_instance_valid(navigation_agent_2d):
 		return
 
+	if current_state != State.CHASE:
+		move_direction = 0.0
+		return
+
 	if not is_instance_valid(Target):
 		_try_find_target()
 		if not is_instance_valid(Target):
 			move_direction = 0.0
 			return
-	elif not is_instance_valid(last_attacker):
-		_try_find_target()
 
 	if is_jumping_detour:
 		if is_on_floor() and velocity.y >= 0:
@@ -217,9 +410,8 @@ func _process_ai_navigation() -> void:
 		else:
 			return
 
-	if current_state == State.CHASE or current_state == State.IDLE:
-		if is_on_floor() and not is_traversing_link:
-			navigation_agent_2d.target_position = Target.global_position
+	if is_on_floor() and not is_traversing_link:
+		navigation_agent_2d.target_position = Target.global_position
 
 	if is_traversing_link:
 		var dist_to_exit := global_position.distance_to(link_exit_position)
@@ -360,7 +552,7 @@ func _recover_from_physics_state() -> void:
 
 # --- AI Commands ---
 func jump() -> void:
-	if is_on_floor() and current_movement_state == MovementState.NORMAL and current_state != State.DEAD:
+	if is_on_floor() and current_movement_state == MovementState.NORMAL and current_state != State.DEAD and current_state != State.STUNNED:
 		velocity.y = jump_velocity * UNIT_SCALE
 		is_jumping_detour = true
 
@@ -373,7 +565,31 @@ func apply_impulse(impulse_velocity: Vector2, linger: float) -> void:
 	if current_state != State.DEAD:
 		current_movement_state = MovementState.NORMAL
 
-# Remote call for clients/players to deal damage to the server-authoritative enemy
+# --- Stun Logic ---
+func apply_stun() -> void:
+	if current_state == State.DEAD:
+		return
+
+	is_punching = false
+	can_punch = true
+
+	current_state = State.STUNNED
+	move_direction = 0.0
+	override_animations = true
+	
+	var hurt_anim := "Hurt" if (sprite and sprite.sprite_frames.has_animation("Hurt")) else "Fall"
+	play_animation_once(hurt_anim)
+
+	if stun_time:
+		stun_time.start()
+
+func _on_stun_timeout() -> void:
+	if current_state == State.STUNNED:
+		override_animations = false
+		is_punching = false
+		can_punch = true
+		current_state = State.CHASE if is_instance_valid(Target) else State.IDLE
+
 @rpc("any_peer", "call_local", "reliable")
 func request_damage(amount: float, origin: Vector2, velocit_multiplier: float, attacker_path: NodePath = NodePath("")) -> void:
 	if not multiplayer.is_server():
@@ -394,15 +610,16 @@ func damage(amount: float, origin: Vector2, velocit_multiplier: float, attacker:
 	_play_hit_flash.rpc()
 	
 	if health <= 0.0:
-		die(origin)
-		set_collision_mask_value(2, false)
-	elif origin != Vector2.ZERO:
-		if origin.x < global_position.x:
-			global_position.y += 10
-			apply_impulse(Vector2(4 * velocit_multiplier, -2 * velocit_multiplier), 0.4)
-		elif origin.x > global_position.x:
-			global_position.y += 10
-			apply_impulse(Vector2(-4 * velocit_multiplier, -2 * velocit_multiplier), 0.4)
+		_sync_die.rpc(origin)
+	else:
+		apply_stun()
+		if origin != Vector2.ZERO:
+			if origin.x < global_position.x:
+				global_position.y += 10
+				apply_impulse(Vector2(4 * velocit_multiplier, -2 * velocit_multiplier), 0.4)
+			elif origin.x > global_position.x:
+				global_position.y += 10
+				apply_impulse(Vector2(-4 * velocit_multiplier, -2 * velocit_multiplier), 0.4)
 
 @rpc("authority", "call_local", "reliable")
 func _play_hit_flash() -> void:
@@ -413,10 +630,15 @@ func _play_hit_flash() -> void:
 		modulate_tween = create_tween()
 		modulate_tween.tween_property(sprite, "self_modulate", Color.WHITE, 0.2)
 
+@rpc("authority", "call_local", "reliable")
+func _sync_die(origin: Vector2 = Vector2.ZERO) -> void:
+	die(origin)
+
 func die(origin: Vector2 = Vector2.ZERO) -> void:
 	current_state = State.DEAD
 	override_animations = true
 	
+	set_collision_mask_value(2, false)
 	set_collision_mask_value(3, false)
 	
 	var dir_x: float = 0.0
@@ -434,6 +656,7 @@ func die(origin: Vector2 = Vector2.ZERO) -> void:
 	
 	var fade_tween := create_tween()
 	fade_tween.tween_property(self, "modulate:a", 0.0, death_despawn_time).set_delay(death_despawn_time * 0.5)
+	
 	fade_tween.tween_callback(queue_free)
 
 # --- Visuals & Animations ---
@@ -464,8 +687,8 @@ func _on_sprite_animation_finished() -> void:
 	if not sprite or current_state == State.DEAD:
 		return
 	match sprite.animation:
-		"Hurt", "LedgeGrab", "Dash":
-			if current_movement_state == MovementState.NORMAL:
+		"Hurt", "LedgeGrab", "Dash", "Punch1":
+			if current_movement_state == MovementState.NORMAL and current_state != State.STUNNED:
 				override_animations = false
 
 func set_smoke_emitting(emitting: bool) -> void:

@@ -376,20 +376,33 @@ script = ExtResource("5_1wgvv")
 network_player = ExtResource("1_w7ufb")
 Spawn_Node = NodePath("..")
 
-[node name="EvilEnemy" parent="." unique_id=1788415153 node_paths=PackedStringArray("Target") instance=ExtResource("7_ori7k")]
+[node name="EvilEnemy" parent="." unique_id=1788415153 instance=ExtResource("7_ori7k")]
 z_index = 1
-position = Vector2(-694, -121)
-Target = NodePath("../Node2D")
+position = Vector2(-508, 128)
 
-[node name="EvilEnemy2" parent="." unique_id=879209881 node_paths=PackedStringArray("Target") instance=ExtResource("7_ori7k")]
+[node name="EvilEnemy4" parent="." unique_id=1257445015 instance=ExtResource("7_ori7k")]
 z_index = 1
-position = Vector2(-506, -93)
-Target = NodePath("../Node2D")
+position = Vector2(-502, -261)
 
-[node name="EvilEnemy3" parent="." unique_id=109864234 node_paths=PackedStringArray("Target") instance=ExtResource("7_ori7k")]
+[node name="EvilEnemy5" parent="." unique_id=1962809977 instance=ExtResource("7_ori7k")]
 z_index = 1
-position = Vector2(-553, -237)
-Target = NodePath("../Node2D")
+position = Vector2(-89, -490)
+
+[node name="EvilEnemy6" parent="." unique_id=1207304741 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-483, -307)
+
+[node name="EvilEnemy7" parent="." unique_id=988311811 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-477, -543)
+
+[node name="EvilEnemy8" parent="." unique_id=417459502 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-389, -641)
+
+[node name="EvilEnemy3" parent="." unique_id=109864234 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-416, -191)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1476609023]
 z_index = -1
@@ -453,5 +466,7 @@ navigation_layers = 4
 start_position = Vector2(916, 309)
 end_position = Vector2(1035, 182)
 
-[node name="Node2D" type="Node2D" parent="." unique_id=1330725876]
-position = Vector2(-825, 283)
+[node name="EvilEnemy2" parent="." unique_id=879209881 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(771, -93)
+initial_facing_direction = -1

@@ -30,6 +30,18 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("Smoke/Smoke2:emitting")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath("SpriteTransformOffset/SpriteSheet:animation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("SpriteTransformOffset/SpriteSheet:frame")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("SpriteTransformOffset/SpriteSheet:flip_h")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("SpriteTransformOffset/SpriteSheet:rotation")
+properties/6/spawn = true
+properties/6/replication_mode = 1
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ut5v"]
 size = Vector2(52, 59)
@@ -549,6 +561,7 @@ animations = [{
 collision_mask = 5
 platform_wall_layers = 65535
 script = ExtResource("1_6v2m8")
+max_offset = Vector2(50, 40)
 
 [node name="SpritePlaceHolder" type="ColorRect" parent="." unique_id=2105916372]
 visible = false
@@ -740,6 +753,10 @@ sprite_frames = SubResource("SpriteFrames_dvq0s")
 animation = &"Idle"
 frame_progress = 0.19570844
 offset = Vector2(-1.2912111, -2.758667)
+
+[node name="InvincibilityTimer" type="Timer" parent="." unique_id=1230506164]
+wait_time = 3.0
+one_shot = true
 
 [connection signal="area_entered" from="LedgeDetecorArea" to="." method="_on_ledge_detecor_area_area_entered"]
 [connection signal="timeout" from="FireFill" to="." method="_on_fire_fill_timeout"]

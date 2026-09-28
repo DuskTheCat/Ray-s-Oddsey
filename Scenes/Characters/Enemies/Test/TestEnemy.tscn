@@ -556,6 +556,7 @@ collision_layer = 2
 collision_mask = 6
 platform_wall_layers = 65535
 script = ExtResource("1_xrjr6")
+punch_windup_time = 0.25
 
 [node name="SpritePlaceHolder" type="ColorRect" parent="." unique_id=2105916372]
 offset_left = -20.0
@@ -598,16 +599,12 @@ wait_time = 0.1
 autostart = true
 
 [node name="PunchTimeout" type="Timer" parent="." unique_id=2493071]
-wait_time = 0.5
 one_shot = true
 
 [node name="PunchCooldown" type="Timer" parent="." unique_id=65451665]
-wait_time = 0.3
 one_shot = true
 
 [node name="PunchHitbox" type="Area2D" parent="." unique_id=85656686]
-visible = false
-monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitbox" unique_id=1205447313]
@@ -634,7 +631,7 @@ avoidance_mask = 2
 
 [node name="RayCast2D" type="RayCast2D" parent="WallCheck" unique_id=1490666516]
 target_position = Vector2(-50, 0)
-collision_mask = 4
+collision_mask = 6
 
 [node name="LedgeCheck" type="Node2D" parent="." unique_id=1293633596]
 
@@ -647,9 +644,26 @@ collide_with_areas = true
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=646568223]
 replication_config = SubResource("SceneReplicationConfig_xrjr6")
 
+[node name="Sight" type="Area2D" parent="." unique_id=159990112]
+collision_layer = 5
+collision_mask = 5
+monitorable = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sight" unique_id=502300411]
+polygon = PackedVector2Array(0, -27, 0, -9, 523, 230, 523, -287)
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1581482716]
+target_position = Vector2(0, 0)
+collision_mask = 5
+
+[node name="StunTime" type="Timer" parent="." unique_id=412853335]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="area_entered" from="LedgeDetecorArea" to="." method="_on_ledge_detecor_area_area_entered"]
 [connection signal="timeout" from="FireFill" to="." method="_on_fire_fill_timeout"]
 [connection signal="timeout" from="PunchTimeout" to="." method="_on_punch_timeout_timeout"]
 [connection signal="timeout" from="PunchCooldown" to="." method="_on_punch_cooldown_timeout"]
+[connection signal="area_entered" from="Sight" to="." method="_on_sight_area_entered"]
 
 [editable path="Smoke"]
