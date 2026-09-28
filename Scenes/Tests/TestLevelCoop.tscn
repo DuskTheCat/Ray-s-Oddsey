@@ -9,165 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://34lxo0i6v7iy" path="res://Scripts/Co-Op_Mode/network_ui.tscn" id="6_x4lpi"]
 [ext_resource type="Texture2D" uid="uid://mauovob84ryo" path="res://Textures/TileSets/Test.png" id="7_1abau"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1abau"]
-size = Vector2(50, 12)
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_bbdmo"]
-viewport_path = NodePath("SubViewport")
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_rpbxn"]
-viewport_path = NodePath("SubViewport2")
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1abau"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(136, 412, 74, 64)
-margin = Rect2(98, 93, 182, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bbdmo"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(0, 412, 136, 129)
-margin = Rect2(64, 55, 120, 127)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rpbxn"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(0, 256, 155, 156)
-margin = Rect2(46, 36, 101, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_x4lpi"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(256, 0, 161, 157)
-margin = Rect2(46, 33, 95, 99)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m5o8g"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(256, 157, 143, 135)
-margin = Rect2(65, 50, 113, 121)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_he1pu"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(155, 256, 91, 77)
-margin = Rect2(88, 73, 165, 179)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4vq3s"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(136, 476, 50, 47)
-margin = Rect2(108, 88, 206, 209)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_t2bhm"]
-atlas = ExtResource("1_1wx1a")
-region = Rect2(0, 0, 256, 256)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_1d66n"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1abau")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bbdmo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rpbxn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_x4lpi")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m5o8g")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_he1pu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4vq3s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_t2bhm")
-}],
-"loop": 0,
-"name": &"SmokeFront",
-"speed": 11.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3c2gb"]
-atlas = ExtResource("3_1abau")
-region = Rect2(310, 432, 102, 83)
-margin = Rect2(82, 84, 154, 173)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yctyn"]
-atlas = ExtResource("3_1abau")
-region = Rect2(0, 454, 173, 171)
-margin = Rect2(44, 34, 83, 85)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_66b5x"]
-atlas = ExtResource("3_1abau")
-region = Rect2(0, 256, 203, 198)
-margin = Rect2(22, 18, 53, 58)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oe5fo"]
-atlas = ExtResource("3_1abau")
-region = Rect2(256, 0, 217, 203)
-margin = Rect2(19, 16, 39, 53)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lt2bc"]
-atlas = ExtResource("3_1abau")
-region = Rect2(203, 256, 186, 176)
-margin = Rect2(40, 25, 70, 80)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j48lh"]
-atlas = ExtResource("3_1abau")
-region = Rect2(173, 454, 137, 118)
-margin = Rect2(66, 50, 119, 138)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cfm0d"]
-atlas = ExtResource("3_1abau")
-region = Rect2(389, 203, 81, 76)
-margin = Rect2(92, 71, 175, 180)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5hwvh"]
-atlas = ExtResource("3_1abau")
-region = Rect2(203, 432, 26, 22)
-margin = Rect2(124, 104, 230, 234)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rlsg5"]
-atlas = ExtResource("3_1abau")
-region = Rect2(0, 0, 256, 256)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_8himk"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3c2gb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yctyn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_66b5x")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oe5fo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lt2bc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j48lh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cfm0d")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5hwvh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rlsg5")
-}],
-"loop": 0,
-"name": &"SmokeBack",
-"speed": 11.0
-}]
-
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_6d38g"]
 vertices = PackedVector2Array(1020, 102, 1020, -34.890625, 1132, 93.109375, 1132, 221.10938, 1004, 221.10938, 748, 102, -916, 508.42188, -1073.8125, 508.02344, -1041.1719, -927.0625, -916, 349.10938, 3146.7031, -959.9297, 748, -34.890625, 2284, -546.8906, 2284, -418.89063, 2156, -418.89063, 2156, -290.89063, 2028, -290.89063, 2028, -162.89063, 1900, -162.89063, 1900, -34.890625, 1644, -34.890625, 1644, 93.109375, 1004, 349.10938, 3093.2813, 518.96875, 2940, 518.5703, 2940, -546.8906)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(0, 3, 4, 5), PackedInt32Array(6, 7, 8, 9), PackedInt32Array(9, 8, 10, 11), PackedInt32Array(12, 13, 14), PackedInt32Array(14, 15, 16), PackedInt32Array(16, 17, 18), PackedInt32Array(18, 19, 20), PackedInt32Array(20, 21, 2, 1), PackedInt32Array(4, 22, 9, 5), PackedInt32Array(23, 24, 25, 10), PackedInt32Array(11, 5, 9), PackedInt32Array(1, 11, 10, 12), PackedInt32Array(10, 25, 12), PackedInt32Array(1, 12, 14), PackedInt32Array(1, 14, 16), PackedInt32Array(1, 16, 18, 20)])
@@ -315,6 +156,165 @@ physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 4
 sources/1 = SubResource("TileSetAtlasSource_10jam")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1abau"]
+size = Vector2(50, 12)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bbdmo"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_rpbxn"]
+viewport_path = NodePath("SubViewport2")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x4lpi"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(136, 412, 74, 64)
+margin = Rect2(98, 93, 182, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m5o8g"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(0, 412, 136, 129)
+margin = Rect2(64, 55, 120, 127)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_he1pu"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(0, 256, 155, 156)
+margin = Rect2(46, 36, 101, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4vq3s"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(256, 0, 161, 157)
+margin = Rect2(46, 33, 95, 99)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2bhm"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(256, 157, 143, 135)
+margin = Rect2(65, 50, 113, 121)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1d66n"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(155, 256, 91, 77)
+margin = Rect2(88, 73, 165, 179)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3c2gb"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(136, 476, 50, 47)
+margin = Rect2(108, 88, 206, 209)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yctyn"]
+atlas = ExtResource("1_1wx1a")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_66b5x"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x4lpi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m5o8g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_he1pu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4vq3s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t2bhm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1d66n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3c2gb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yctyn")
+}],
+"loop": 0,
+"name": &"SmokeFront",
+"speed": 11.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oe5fo"]
+atlas = ExtResource("3_1abau")
+region = Rect2(310, 432, 102, 83)
+margin = Rect2(82, 84, 154, 173)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lt2bc"]
+atlas = ExtResource("3_1abau")
+region = Rect2(0, 454, 173, 171)
+margin = Rect2(44, 34, 83, 85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j48lh"]
+atlas = ExtResource("3_1abau")
+region = Rect2(0, 256, 203, 198)
+margin = Rect2(22, 18, 53, 58)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cfm0d"]
+atlas = ExtResource("3_1abau")
+region = Rect2(256, 0, 217, 203)
+margin = Rect2(19, 16, 39, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5hwvh"]
+atlas = ExtResource("3_1abau")
+region = Rect2(203, 256, 186, 176)
+margin = Rect2(40, 25, 70, 80)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rlsg5"]
+atlas = ExtResource("3_1abau")
+region = Rect2(173, 454, 137, 118)
+margin = Rect2(66, 50, 119, 138)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8himk"]
+atlas = ExtResource("3_1abau")
+region = Rect2(389, 203, 81, 76)
+margin = Rect2(92, 71, 175, 180)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ptuf"]
+atlas = ExtResource("3_1abau")
+region = Rect2(203, 432, 26, 22)
+margin = Rect2(124, 104, 230, 234)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q840i"]
+atlas = ExtResource("3_1abau")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hpuih"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oe5fo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lt2bc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j48lh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cfm0d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5hwvh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rlsg5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8himk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ptuf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q840i")
+}],
+"loop": 0,
+"name": &"SmokeBack",
+"speed": 11.0
+}]
+
 [node name="Node" type="Node2D" unique_id=476923287]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1954018795 node_paths=PackedStringArray("Spawn_Node")]
@@ -340,55 +340,6 @@ mouse_filter = 1
 [node name="InputCode" parent="CanvasLayer/NetworkUI/VBoxContainer2" index="0" unique_id=372285730]
 max_length = 0
 select_all_on_focus = false
-
-[node name="Ledges" type="Node2D" parent="." unique_id=1822407389]
-z_index = 1
-position = Vector2(-541, -262)
-
-[node name="Ledge" type="Area2D" parent="Ledges" unique_id=476744363 groups=["Ledge"]]
-position = Vector2(3449, -275)
-metadata/_edit_group_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge" unique_id=1950824297]
-shape = SubResource("RectangleShape2D_1abau")
-
-[node name="Ledge4" type="Area2D" parent="Ledges" unique_id=1860194764 groups=["Ledge"]]
-position = Vector2(-342, 619)
-metadata/_edit_group_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge4" unique_id=377977846]
-shape = SubResource("RectangleShape2D_1abau")
-
-[node name="Smoke" type="GPUParticles2D" parent="Ledges/Ledge4" unique_id=1094554636]
-z_index = 2
-texture = SubResource("ViewportTexture_bbdmo")
-
-[node name="Smoke" type="GPUParticles2D" parent="Ledges/Ledge4/Smoke" unique_id=1824576466]
-texture = SubResource("ViewportTexture_rpbxn")
-
-[node name="SubViewport" type="SubViewport" parent="Ledges/Ledge4/Smoke" unique_id=1926994364]
-
-[node name="Front" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport" unique_id=2121617464]
-position = Vector2(256, 256)
-sprite_frames = SubResource("SpriteFrames_1d66n")
-animation = &"SmokeFront"
-script = ExtResource("2_nb6uh")
-json_path = "res://Textures/Effects/Smoke/SmokeFront.json"
-texture_atlas = ExtResource("1_1wx1a")
-smokefront_loop = false
-smokefront_fps = 11.0
-
-[node name="SubViewport2" type="SubViewport" parent="Ledges/Ledge4/Smoke" unique_id=352809467]
-
-[node name="Back" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport2" unique_id=1734725141]
-position = Vector2(256, 256)
-sprite_frames = SubResource("SpriteFrames_8himk")
-animation = &"SmokeBack"
-script = ExtResource("2_nb6uh")
-json_path = "res://Textures/Effects/Smoke/SmokeBack.json"
-texture_atlas = ExtResource("3_1abau")
-smokeback_loop = false
-smokeback_fps = 11.0
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=947897175]
 z_index = -1
@@ -452,17 +403,87 @@ navigation_layers = 4
 start_position = Vector2(916, 309)
 end_position = Vector2(1035, 182)
 
-[node name="Node2D" type="Node2D" parent="." unique_id=1983650564]
-position = Vector2(-825, 283)
+[node name="Ledges" type="Node2D" parent="." unique_id=1418360240]
+z_index = 1
+position = Vector2(-541, -262)
+
+[node name="Ledge" type="Area2D" parent="Ledges" unique_id=1378217606 groups=["Ledge"]]
+position = Vector2(3449, -275)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge" unique_id=1663994649]
+shape = SubResource("RectangleShape2D_1abau")
+
+[node name="Ledge4" type="Area2D" parent="Ledges" unique_id=643164314 groups=["Ledge"]]
+position = Vector2(-342, 619)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ledges/Ledge4" unique_id=505513462]
+shape = SubResource("RectangleShape2D_1abau")
+
+[node name="Smoke" type="GPUParticles2D" parent="Ledges/Ledge4" unique_id=1028907151]
+z_index = 2
+texture = SubResource("ViewportTexture_bbdmo")
+
+[node name="Smoke" type="GPUParticles2D" parent="Ledges/Ledge4/Smoke" unique_id=1270302766]
+texture = SubResource("ViewportTexture_rpbxn")
+
+[node name="SubViewport" type="SubViewport" parent="Ledges/Ledge4/Smoke" unique_id=1201445084]
+
+[node name="Front" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport" unique_id=181776778]
+position = Vector2(256, 256)
+sprite_frames = SubResource("SpriteFrames_66b5x")
+animation = &"SmokeFront"
+script = ExtResource("2_nb6uh")
+json_path = "res://Textures/Effects/Smoke/SmokeFront.json"
+texture_atlas = ExtResource("1_1wx1a")
+smokefront_loop = false
+smokefront_fps = 11.0
+
+[node name="SubViewport2" type="SubViewport" parent="Ledges/Ledge4/Smoke" unique_id=1656354181]
+
+[node name="Back" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport2" unique_id=636254209]
+position = Vector2(256, 256)
+sprite_frames = SubResource("SpriteFrames_hpuih")
+animation = &"SmokeBack"
+script = ExtResource("2_nb6uh")
+json_path = "res://Textures/Effects/Smoke/SmokeBack.json"
+texture_atlas = ExtResource("3_1abau")
+smokeback_loop = false
+smokeback_fps = 11.0
 
 [node name="EvilEnemy" parent="." unique_id=1788415153 instance=ExtResource("6_nb6uh")]
-position = Vector2(-712, 154)
+z_index = 1
+position = Vector2(-508, 128)
 
-[node name="EvilEnemy2" parent="." unique_id=1266957396 instance=ExtResource("6_nb6uh")]
-position = Vector2(-614, 25)
+[node name="EvilEnemy4" parent="." unique_id=1458865535 instance=ExtResource("6_nb6uh")]
+z_index = 1
+position = Vector2(-502, -261)
 
-[node name="EvilEnemy3" parent="." unique_id=1086764329 instance=ExtResource("6_nb6uh")]
-position = Vector2(-500, 109)
+[node name="EvilEnemy5" parent="." unique_id=1565357951 instance=ExtResource("6_nb6uh")]
+z_index = 1
+position = Vector2(-89, -490)
+
+[node name="EvilEnemy6" parent="." unique_id=527930960 instance=ExtResource("6_nb6uh")]
+z_index = 1
+position = Vector2(-483, -307)
+
+[node name="EvilEnemy7" parent="." unique_id=1409770232 instance=ExtResource("6_nb6uh")]
+z_index = 1
+position = Vector2(-477, -543)
+
+[node name="EvilEnemy8" parent="." unique_id=1235489508 instance=ExtResource("6_nb6uh")]
+z_index = 1
+position = Vector2(-389, -641)
+
+[node name="EvilEnemy3" parent="." unique_id=571269743 instance=ExtResource("6_nb6uh")]
+z_index = 1
+position = Vector2(-416, -191)
+
+[node name="EvilEnemy2" parent="." unique_id=1882939303 instance=ExtResource("6_nb6uh")]
+z_index = 1
+position = Vector2(771, -93)
+initial_facing_direction = -1
 
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/HOST" to="CanvasLayer" method="_on_host_pressed"]
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/JOIN" to="CanvasLayer" method="_on_join_pressed"]
