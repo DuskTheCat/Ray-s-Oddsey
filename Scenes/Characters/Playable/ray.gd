@@ -98,12 +98,12 @@ var shake_trauma: float = 0.0
 var noise := FastNoiseLite.new()
 
 @export_group("Stats")
-@export var Health: float = 100.0:
+@export var Health: float = 75.0:
 	set(value):
 		Health = value
 		if is_instance_valid(health_bar):
 			health_bar.value = value
-@export var Max_Health: float = 100.0
+@export var Max_Health: float = 75.0
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())

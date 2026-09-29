@@ -622,10 +622,12 @@ shape = SubResource("CapsuleShape2D_ykv2e")
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1392093836]
 target_desired_distance = 24.0
 navigation_layers = 4
+simplify_path = true
 avoidance_enabled = true
 radius = 16.0
 avoidance_layers = 2
 avoidance_mask = 2
+debug_enabled = true
 
 [node name="WallCheck" type="Node2D" parent="." unique_id=743923932]
 

@@ -14,6 +14,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export_group("AI")
 @export var Target: CharacterBody2D
 @export var target_scene: PackedScene
+@export var turn_delay: float = 0.5 # --- Time required to switch directions ---
 
 # --- Export Variables ---
 @export_group("Movement")
@@ -61,6 +62,11 @@ var is_jumping_detour: bool = false
 var can_punch: bool = true
 var is_punching: bool = false
 
+# --- Turning State Variables ---
+var current_facing_direction: float = 1.0
+var target_facing_direction: float = 1.0
+var turn_timer: float = 0.0
+
 # --- Aggro System ---
 var last_attacker: CharacterBody2D = null
 var targets_in_sight: Array[CharacterBody2D] = []
@@ -96,6 +102,8 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(1)
 
 func _ready() -> void:
+	current_facing_direction = float(initial_facing_direction)
+	target_facing_direction = current_facing_direction
 	_apply_initial_facing_direction()
 	health = randf_range(min_health, max_health)
 	
@@ -151,11 +159,25 @@ func _apply_initial_facing_direction() -> void:
 func _update_facing_orientation(dir_x: float) -> void:
 	if dir_x == 0.0:
 		return
-	var is_left: bool = (dir_x < 0.0)
+		
+	var new_target_sign: float = -1.0 if dir_x < 0.0 else 1.0
+	
+	if new_target_sign != target_facing_direction:
+		target_facing_direction = new_target_sign
+		turn_timer = turn_delay # Start countdown timer
+
+func _process_turn_delay(delta: float) -> void:
+	if target_facing_direction != current_facing_direction:
+		turn_timer -= delta
+		if turn_timer <= 0.0:
+			current_facing_direction = target_facing_direction
+			_force_apply_facing(current_facing_direction)
+
+func _force_apply_facing(dir_sign: float) -> void:
+	var is_left: bool = (dir_sign < 0.0)
 	if sprite:
 		sprite.flip_h = is_left
 		
-	var dir_sign: float = -1.0 if is_left else 1.0
 	if wall_check:
 		wall_check.scale.x = dir_sign
 	if ledge_check:
@@ -210,6 +232,8 @@ func _on_node_added(node: Node) -> void:
 			get_tree().node_added.disconnect(_on_node_added)
 
 func _physics_process(delta: float) -> void:
+	_process_turn_delay(delta) # Tick turn delay down every physics frame
+
 	if not multiplayer.is_server():
 		update_animation()
 		if move_direction != 0.0:
@@ -292,7 +316,7 @@ func punch() -> void:
 	current_state = State.ATTACK
 	move_direction = 0.0
 
-	# Turn to face target during wind-up
+	# Queue turn direction towards player
 	if is_instance_valid(Target):
 		var face_dir: float = Target.global_position.x - global_position.x
 		_update_facing_orientation(face_dir)
@@ -306,7 +330,7 @@ func punch() -> void:
 		_reset_attack_state()
 		return
 
-	# Re-face target before delivering punch
+	# Re-check facing direction before punch execution
 	if is_instance_valid(Target):
 		var face_dir: float = Target.global_position.x - global_position.x
 		_update_facing_orientation(face_dir)
