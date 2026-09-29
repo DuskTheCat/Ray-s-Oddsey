@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dtgvu3ag6gnbk" path="res://Scripts/Co-Op_Mode/multiplayer_spawner.gd" id="5_1wgvv"]
 [ext_resource type="PackedScene" uid="uid://bbcngyxgka3pb" path="res://Scenes/Characters/Enemies/Test/TestEnemy.tscn" id="7_ori7k"]
 [ext_resource type="Texture2D" uid="uid://mauovob84ryo" path="res://Textures/TileSets/Test.png" id="8_4wt4f"]
+[ext_resource type="Script" uid="uid://71cisuiicucu" path="res://Scripts/Reusable/DeleteArea.gd" id="9_sgkqs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykv2e"]
 size = Vector2(50, 12)
@@ -18,54 +19,48 @@ viewport_path = NodePath("SubViewport")
 [sub_resource type="ViewportTexture" id="ViewportTexture_4wt4f"]
 viewport_path = NodePath("SubViewport2")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4wt4f"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_1mwvq"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(136, 412, 74, 64)
 margin = Rect2(98, 93, 182, 192)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_sgkqs"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_kan2c"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(0, 412, 136, 129)
 margin = Rect2(64, 55, 120, 127)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1mwvq"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_2i8lp"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(0, 256, 155, 156)
 margin = Rect2(46, 36, 101, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kan2c"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_58lhl"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(256, 0, 161, 157)
 margin = Rect2(46, 33, 95, 99)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_2i8lp"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_c7kx7"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(256, 157, 143, 135)
 margin = Rect2(65, 50, 113, 121)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_58lhl"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_32lcq"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(155, 256, 91, 77)
 margin = Rect2(88, 73, 165, 179)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_c7kx7"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_7at04"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(136, 476, 50, 47)
 margin = Rect2(108, 88, 206, 209)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_32lcq"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_23wkm"]
 atlas = ExtResource("2_oxbt5")
 region = Rect2(0, 0, 256, 256)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_7at04"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_ma7wc"]
 animations = [{
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4wt4f")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sgkqs")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_1mwvq")
 }, {
@@ -83,65 +78,65 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_32lcq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7at04")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_23wkm")
 }],
 "loop": 0,
 "name": &"SmokeFront",
 "speed": 11.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_23wkm"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_endry"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(310, 432, 102, 83)
 margin = Rect2(82, 84, 154, 173)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ma7wc"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjgyu"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(0, 454, 173, 171)
 margin = Rect2(44, 34, 83, 85)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_endry"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_y8pcd"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(0, 256, 203, 198)
 margin = Rect2(22, 18, 53, 58)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jjgyu"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_84p0k"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(256, 0, 217, 203)
 margin = Rect2(19, 16, 39, 53)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_y8pcd"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4434"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(203, 256, 186, 176)
 margin = Rect2(40, 25, 70, 80)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_84p0k"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_g0tn2"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(173, 454, 137, 118)
 margin = Rect2(66, 50, 119, 138)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_e4434"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_j5ojd"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(389, 203, 81, 76)
 margin = Rect2(92, 71, 175, 180)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_g0tn2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_3wbh1"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(203, 432, 26, 22)
 margin = Rect2(124, 104, 230, 234)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_j5ojd"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_23x2c"]
 atlas = ExtResource("4_1wgvv")
 region = Rect2(0, 0, 256, 256)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_3wbh1"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_lkqkr"]
 animations = [{
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_23wkm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ma7wc")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_endry")
 }, {
@@ -162,18 +157,22 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j5ojd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3wbh1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_23x2c")
 }],
 "loop": 0,
 "name": &"SmokeBack",
 "speed": 11.0
 }]
 
-[sub_resource type="NavigationPolygon" id="NavigationPolygon_xhsim"]
-vertices = PackedVector2Array(1020, 102, 1020, -34.890625, 1132, 93.109375, 1132, 221.10938, 1004, 221.10938, 492, 102, -916, 508.42188, -1073.8125, 508.02344, -1041.1719, -927.0625, -916, 349.10938, 1020, -282, 1020, -546.8906, 2028, -290.89063, 2028, -162.89063, 1900, -162.89063, 2284, -546.8906, 2284, -418.89063, 2156, -418.89063, 2156, -290.89063, 748, -546.8906, 748, -418.89063, 492, -418.89063, 1900, -34.890625, 1644, -34.890625, 1644, 93.109375, 764, -34.890625, 764, -162.89063, 492, -282, 380, -162.89063, 380, -290.89063, 108, -26, 492, -26, 1004, 349.10938, 108, -290.89063, 3093.2813, 518.96875, 2940, 518.5703, 2940, -546.8906, 3146.7031, -959.9297)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(0, 3, 4, 5), PackedInt32Array(6, 7, 8, 9), PackedInt32Array(10, 11, 12, 13, 14), PackedInt32Array(8, 15, 16, 17, 11), PackedInt32Array(17, 18, 12, 11), PackedInt32Array(19, 20, 21), PackedInt32Array(14, 22, 23, 10), PackedInt32Array(10, 23, 24, 2, 1), PackedInt32Array(10, 1, 25, 26), PackedInt32Array(27, 10, 26, 28), PackedInt32Array(27, 28, 29, 21), PackedInt32Array(30, 31, 5, 9), PackedInt32Array(4, 32, 9, 5), PackedInt32Array(30, 9, 8, 33), PackedInt32Array(34, 35, 36, 37), PackedInt32Array(8, 37, 36, 15), PackedInt32Array(8, 11, 19), PackedInt32Array(33, 8, 19, 21), PackedInt32Array(33, 21, 29)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-1049, -935, -1082, 516, 3101, 527, 3155, -968)])
-cell_size = 2.0
-agent_radius = 8.0
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_lkqkr"]
+vertices = PackedVector2Array(3156.3516, 667.78906, 444.90625, 616, 2942, 616, 106, -292.89063, 106, -203.46094, 29.851563, -383.89063, 484.9375, -487.40625, 490, -420.89063, 476.14844, -402.8828, 352.75, -332.67188, 3072.6484, -686.1406, 2942, -548.8906, 2245.3438, -613.34375, 2282, -548.8906, 1755.9531, -150.86719, 2154, -420.89063, -918, 589.85156, -1056.4375, 587.21094, -1012.3594, 288.9297, -918, 347.10938, 825.1719, 274.97656, 1002, 347.10938, 1002, 219.10938, 1144.7891, 52.59375, 1130, 91.109375, 1152.2578, -433.64844, 1022, -427.71875, 1022, -548.8906, 1180.1484, -535.6172, 925.5625, -659.09375, 746, -548.8906, 746, -420.89063, 2282, -420.89063, 2154, -292.89063, 2026, -292.89063, 2026, -164.89063, 1898, -164.89063, 1898, -36.890625, 1642, -36.890625, 1559.75, -42.09375, 1215.0938, -29.710938, 1642, 91.109375, 1130, 219.10938, 1091.3281, -27, 1171, -223.07031, 1022, -27, 1022, -36.890625, 766, -36.890625, 766, -164.89063, 490, -403.5, 353.27344, -320.46875, 382, -292.89063, 551.7578, -229.02344, 382, -164.89063)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(3, 4, 5), PackedInt32Array(3, 5, 6, 7, 8, 9), PackedInt32Array(10, 0, 2, 11), PackedInt32Array(12, 10, 11, 13), PackedInt32Array(14, 12, 13, 15), PackedInt32Array(16, 17, 18, 19), PackedInt32Array(19, 18, 20, 21), PackedInt32Array(22, 21, 20), PackedInt32Array(22, 20, 23, 24), PackedInt32Array(25, 26, 27, 28), PackedInt32Array(29, 28, 27), PackedInt32Array(29, 27, 30), PackedInt32Array(6, 29, 30), PackedInt32Array(6, 30, 31, 7), PackedInt32Array(13, 32, 15), PackedInt32Array(15, 33, 34), PackedInt32Array(14, 15, 34), PackedInt32Array(34, 35, 36), PackedInt32Array(14, 34, 36), PackedInt32Array(14, 36, 37, 38, 39), PackedInt32Array(40, 39, 38, 41, 24, 23), PackedInt32Array(24, 42, 22), PackedInt32Array(40, 23, 43, 44), PackedInt32Array(43, 45, 46, 44), PackedInt32Array(46, 47, 48, 44), PackedInt32Array(7, 49, 8), PackedInt32Array(3, 9, 50), PackedInt32Array(51, 3, 50), PackedInt32Array(51, 50, 52), PackedInt32Array(53, 51, 52), PackedInt32Array(48, 53, 52, 44)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-1021, 279, -1068, 597, 3167, 678, 3082, -697, 2241, -623, 1750, -159, 1557, -52, 1223, -40, 1179, -233, 554, -239, 363, -327, 479, -393, 1160, -424, 1192, -541, 926, -670, 482, -497, 16, -391, 127, -128, 518, -85, 643, -17, 1086, -17, 1131, 50, 822, 265)])
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lkqkr"]
 texture = ExtResource("8_4wt4f")
@@ -315,6 +314,9 @@ physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 4
 sources/1 = SubResource("TileSetAtlasSource_lkqkr")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xhsim"]
+size = Vector2(9058, 200)
+
 [node name="Node" type="Node2D" unique_id=476923287]
 script = ExtResource("1_ori7k")
 player_scene = ExtResource("1_w7ufb")
@@ -348,7 +350,7 @@ texture = SubResource("ViewportTexture_4wt4f")
 
 [node name="Front" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport" unique_id=1203844655]
 position = Vector2(256, 256)
-sprite_frames = SubResource("SpriteFrames_7at04")
+sprite_frames = SubResource("SpriteFrames_ma7wc")
 animation = &"SmokeFront"
 script = ExtResource("3_uqja2")
 json_path = "res://Textures/Effects/Smoke/SmokeFront.json"
@@ -360,7 +362,7 @@ smokefront_fps = 11.0
 
 [node name="Back" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport2" unique_id=1730524947]
 position = Vector2(256, 256)
-sprite_frames = SubResource("SpriteFrames_3wbh1")
+sprite_frames = SubResource("SpriteFrames_lkqkr")
 animation = &"SmokeBack"
 script = ExtResource("3_uqja2")
 json_path = "res://Textures/Effects/Smoke/SmokeBack.json"
@@ -380,34 +382,9 @@ Spawn_Node = NodePath("..")
 z_index = 1
 position = Vector2(-508, 128)
 
-[node name="EvilEnemy4" parent="." unique_id=1257445015 instance=ExtResource("7_ori7k")]
-z_index = 1
-position = Vector2(-502, -261)
-
-[node name="EvilEnemy5" parent="." unique_id=1962809977 instance=ExtResource("7_ori7k")]
-z_index = 1
-position = Vector2(-89, -490)
-
-[node name="EvilEnemy6" parent="." unique_id=1207304741 instance=ExtResource("7_ori7k")]
-z_index = 1
-position = Vector2(-483, -307)
-
-[node name="EvilEnemy7" parent="." unique_id=988311811 instance=ExtResource("7_ori7k")]
-z_index = 1
-position = Vector2(-477, -543)
-
-[node name="EvilEnemy8" parent="." unique_id=417459502 instance=ExtResource("7_ori7k")]
-z_index = 1
-position = Vector2(-389, -641)
-
-[node name="EvilEnemy3" parent="." unique_id=109864234 instance=ExtResource("7_ori7k")]
-z_index = 1
-position = Vector2(-416, -191)
-
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1476609023]
 z_index = -1
-position = Vector2(142, 1)
-navigation_polygon = SubResource("NavigationPolygon_xhsim")
+navigation_polygon = SubResource("NavigationPolygon_lkqkr")
 navigation_layers = 4
 
 [node name="TileMapLayer" type="TileMapLayer" parent="NavigationRegion2D" unique_id=400962276]
@@ -416,71 +393,42 @@ tile_map_data = PackedByteArray("AAD8/wIAAQAAAAAAAAD9/wIAAQAAAAAAAAD+/wIAAQAAAAA
 tile_set = SubResource("TileSet_xhsim")
 physics_quadrant_size = 1
 
-[node name="JumpLink" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1290374553]
-position = Vector2(98, 31)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(774, 310)
-end_position = Vector2(890, 165)
+[node name="EvilEnemy4" parent="." unique_id=1257445015 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-643, -268)
 
-[node name="JumpLink2" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1282222244]
-position = Vector2(147, -86)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(842, 280)
-end_position = Vector2(1020, 148)
+[node name="EvilEnemy5" parent="." unique_id=1962809977 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-230, -497)
 
-[node name="JumpLink8" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1558481537]
-position = Vector2(376, -191)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(791, 253)
-end_position = Vector2(575, 115)
+[node name="EvilEnemy6" parent="." unique_id=1207304741 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-624, -314)
 
-[node name="JumpLink3" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=468321701]
-position = Vector2(607, -240)
-navigation_layers = 4
-start_position = Vector2(914, 314)
-end_position = Vector2(1081, 176)
+[node name="EvilEnemy7" parent="." unique_id=988311811 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-618, -550)
 
-[node name="JumpLink4" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1485019070]
-position = Vector2(916, -410)
-navigation_layers = 4
-start_position = Vector2(912, 315)
-end_position = Vector2(1017, 185)
+[node name="EvilEnemy8" parent="." unique_id=417459502 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-530, -648)
 
-[node name="JumpLink5" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1514405897]
-position = Vector2(1062, -550)
-navigation_layers = 4
-start_position = Vector2(901, 317)
-end_position = Vector2(1022, 176)
-
-[node name="JumpLink6" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1269111024]
-position = Vector2(1164, -656)
-navigation_layers = 4
-start_position = Vector2(915, 310)
-end_position = Vector2(1042, 162)
-
-[node name="JumpLink7" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1353708617]
-position = Vector2(1297, -798)
-navigation_layers = 4
-start_position = Vector2(916, 309)
-end_position = Vector2(1035, 182)
-
-[node name="JumpLink9" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=603979601]
-position = Vector2(-286, -593)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(650, 267)
-end_position = Vector2(823, 125)
-
-[node name="JumpLink10" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=716560287]
-position = Vector2(-286, -593)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(753, 420)
-end_position = Vector2(647, 269)
+[node name="EvilEnemy3" parent="." unique_id=109864234 instance=ExtResource("7_ori7k")]
+z_index = 1
+position = Vector2(-557, -198)
 
 [node name="EvilEnemy2" parent="." unique_id=879209881 instance=ExtResource("7_ori7k")]
 z_index = 1
-position = Vector2(987, -203)
+position = Vector2(846, -210)
+
+[node name="Area2D" type="Area2D" parent="." unique_id=397689429]
+position = Vector2(0, 1440)
+collision_layer = 65535
+collision_mask = 65535
+script = ExtResource("9_sgkqs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=68180590]
+position = Vector2(741, 90)
+shape = SubResource("RectangleShape2D_xhsim")
+
+[connection signal="body_entered" from="Area2D" to="Area2D" method="_on_body_entered"]

@@ -9,6 +9,9 @@ enum State { NORMAL, CUTSCENE, DEAD }
 enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 
 # --- Export Variables ---
+
+@export var death_scene: String = "res://Scenes/Menus/menu.tscn"
+
 @export_group("Movement")
 @export var walk_speed: float = 1.4
 @export var run_speed: float = 3.5
@@ -76,7 +79,6 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var punch_hitbox: Area2D = $PunchHitbox
 @onready var invincibility_timer: Timer = $InvincibilityTimer
 
-
 # --- Private / Runtime Variables ---
 var current_speed: float = 1.4
 var override_animations: bool = false
@@ -104,6 +106,16 @@ var noise := FastNoiseLite.new()
 		if is_instance_valid(health_bar):
 			health_bar.value = value
 @export var Max_Health: float = 75.0
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		# Ensure multiplayer network loop is active and this node belongs to the local client
+		if multiplayer and is_multiplayer_authority():
+			# Additional safeguard: verify this authority matches the local machine's unique peer ID
+			if multiplayer.get_unique_id() == get_multiplayer_authority():
+				var tree := Engine.get_main_loop() as SceneTree
+				if tree and not death_scene.is_empty():
+					tree.change_scene_to_file.call_deferred(death_scene)
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -305,7 +317,6 @@ func dash() -> void:
 		play_animation_once("Jump")
 		set_smoke_emitting(true)
 		
-		# Upward air dash gives 0.5x duration
 		grant_invincibility(0.067)
 		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
@@ -326,7 +337,6 @@ func dash() -> void:
 		override_animations = true
 		play_animation_once("Dash")
 		
-		# Ground dash gives full 1.0x duration from Inspector timer
 		grant_invincibility(0.067)
 		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
@@ -366,7 +376,6 @@ func dash() -> void:
 		launch_vector = Vector2(ground_dash_direction * dash_velocity, 0.0)
 		apply_physics_impulse(launch_vector, true)
 		
-		# Horizontal air dash gives 0.5x duration
 		grant_invincibility(0.5)
 		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
@@ -408,7 +417,7 @@ func _process_camera_shake(delta: float) -> void:
 		return
 
 	shake_trauma = max(shake_trauma - shake_decay * delta, 0.0)
-	var amount := shake_trauma * shake_trauma  # Exponential curve for smoother decay
+	var amount := shake_trauma * shake_trauma
 	
 	var time := Time.get_ticks_msec() * 0.05
 	var offset_x := max_offset.x * amount  * noise.get_noise_2d(time, 0.0)
@@ -437,8 +446,6 @@ func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: f
 	elif origin != Vector2.ZERO:
 		var dir_x := 1.0 if origin.x < global_position.x else -1.0
 		apply_physics_impulse(Vector2(4.0 * dir_x * velocity_multiplier, -3.0 * velocity_multiplier))
-		
-		# Taking damage grants full 1.0x duration configured on the InvincibilityTimer inspector node
 		grant_invincibility(1.0)
 
 func grant_invincibility(multiplier: float = 1.0) -> void:
@@ -630,7 +637,7 @@ func _on_punch_hitbox_area_entered(area: Area2D) -> void:
 	if parent_node.is_in_group("Entity") and parent_node.is_in_group("Enemy"):
 		if parent_node.has_method("damage"):
 			parent_node.damage(20, global_position, 1, self)
-			apply_shake(100) # Adds screen shake when damaging an enemy
+			apply_shake(100)
 			print("Hit!")
 			var direction = -1.0 if sprite.flip_h else 1.0
 			velocity.y = -3 * UNIT_SCALE

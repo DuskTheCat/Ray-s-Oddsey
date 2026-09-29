@@ -165,48 +165,57 @@ viewport_path = NodePath("SubViewport")
 [sub_resource type="ViewportTexture" id="ViewportTexture_rpbxn"]
 viewport_path = NodePath("SubViewport2")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_x4lpi"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_1abau"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(136, 412, 74, 64)
 margin = Rect2(98, 93, 182, 192)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_m5o8g"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_bbdmo"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(0, 412, 136, 129)
 margin = Rect2(64, 55, 120, 127)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_he1pu"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_rpbxn"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(0, 256, 155, 156)
 margin = Rect2(46, 36, 101, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4vq3s"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_x4lpi"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(256, 0, 161, 157)
 margin = Rect2(46, 33, 95, 99)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_t2bhm"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_m5o8g"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(256, 157, 143, 135)
 margin = Rect2(65, 50, 113, 121)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1d66n"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_he1pu"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(155, 256, 91, 77)
 margin = Rect2(88, 73, 165, 179)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_3c2gb"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_4vq3s"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(136, 476, 50, 47)
 margin = Rect2(108, 88, 206, 209)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_yctyn"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2bhm"]
 atlas = ExtResource("1_1wx1a")
 region = Rect2(0, 0, 256, 256)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_66b5x"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_1d66n"]
 animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1abau")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bbdmo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rpbxn")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_x4lpi")
 }, {
@@ -221,68 +230,68 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_t2bhm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1d66n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3c2gb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yctyn")
 }],
 "loop": 0,
 "name": &"SmokeFront",
 "speed": 11.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_oe5fo"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_3c2gb"]
 atlas = ExtResource("3_1abau")
 region = Rect2(310, 432, 102, 83)
 margin = Rect2(82, 84, 154, 173)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_lt2bc"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_yctyn"]
 atlas = ExtResource("3_1abau")
 region = Rect2(0, 454, 173, 171)
 margin = Rect2(44, 34, 83, 85)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_j48lh"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_66b5x"]
 atlas = ExtResource("3_1abau")
 region = Rect2(0, 256, 203, 198)
 margin = Rect2(22, 18, 53, 58)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cfm0d"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_oe5fo"]
 atlas = ExtResource("3_1abau")
 region = Rect2(256, 0, 217, 203)
 margin = Rect2(19, 16, 39, 53)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_5hwvh"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_lt2bc"]
 atlas = ExtResource("3_1abau")
 region = Rect2(203, 256, 186, 176)
 margin = Rect2(40, 25, 70, 80)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_rlsg5"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_j48lh"]
 atlas = ExtResource("3_1abau")
 region = Rect2(173, 454, 137, 118)
 margin = Rect2(66, 50, 119, 138)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8himk"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_cfm0d"]
 atlas = ExtResource("3_1abau")
 region = Rect2(389, 203, 81, 76)
 margin = Rect2(92, 71, 175, 180)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1ptuf"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_5hwvh"]
 atlas = ExtResource("3_1abau")
 region = Rect2(203, 432, 26, 22)
 margin = Rect2(124, 104, 230, 234)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_q840i"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_rlsg5"]
 atlas = ExtResource("3_1abau")
 region = Rect2(0, 0, 256, 256)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_hpuih"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_8himk"]
 animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3c2gb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yctyn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66b5x")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_oe5fo")
 }, {
@@ -300,15 +309,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_rlsg5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8himk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1ptuf")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_q840i")
 }],
 "loop": 0,
 "name": &"SmokeBack",
@@ -352,57 +352,6 @@ tile_map_data = PackedByteArray("AAD8/wIAAQAAAAAAAAD9/wIAAQAAAAAAAAD+/wIAAQAAAAA
 tile_set = SubResource("TileSet_mdrsg")
 physics_quadrant_size = 1
 
-[node name="JumpLink" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1737200654]
-position = Vector2(98, 31)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(774, 310)
-end_position = Vector2(890, 165)
-
-[node name="JumpLink2" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1047238331]
-position = Vector2(147, -86)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(842, 280)
-end_position = Vector2(1020, 148)
-
-[node name="JumpLink8" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=2131726409]
-position = Vector2(376, -191)
-bidirectional = false
-navigation_layers = 4
-start_position = Vector2(791, 253)
-end_position = Vector2(575, 115)
-
-[node name="JumpLink3" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=208706452]
-position = Vector2(607, -240)
-navigation_layers = 4
-start_position = Vector2(914, 314)
-end_position = Vector2(1081, 176)
-
-[node name="JumpLink4" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=573124231]
-position = Vector2(916, -410)
-navigation_layers = 4
-start_position = Vector2(912, 315)
-end_position = Vector2(1017, 185)
-
-[node name="JumpLink5" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=511732022]
-position = Vector2(1062, -550)
-navigation_layers = 4
-start_position = Vector2(901, 317)
-end_position = Vector2(1022, 176)
-
-[node name="JumpLink6" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=1346236639]
-position = Vector2(1164, -656)
-navigation_layers = 4
-start_position = Vector2(915, 310)
-end_position = Vector2(1042, 162)
-
-[node name="JumpLink7" type="NavigationLink2D" parent="NavigationRegion2D" unique_id=729518717]
-position = Vector2(1297, -798)
-navigation_layers = 4
-start_position = Vector2(916, 309)
-end_position = Vector2(1035, 182)
-
 [node name="Ledges" type="Node2D" parent="." unique_id=1418360240]
 z_index = 1
 position = Vector2(-541, -262)
@@ -432,7 +381,7 @@ texture = SubResource("ViewportTexture_rpbxn")
 
 [node name="Front" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport" unique_id=181776778]
 position = Vector2(256, 256)
-sprite_frames = SubResource("SpriteFrames_66b5x")
+sprite_frames = SubResource("SpriteFrames_1d66n")
 animation = &"SmokeFront"
 script = ExtResource("2_nb6uh")
 json_path = "res://Textures/Effects/Smoke/SmokeFront.json"
@@ -444,7 +393,7 @@ smokefront_fps = 11.0
 
 [node name="Back" type="AnimatedSprite2D" parent="Ledges/Ledge4/Smoke/SubViewport2" unique_id=636254209]
 position = Vector2(256, 256)
-sprite_frames = SubResource("SpriteFrames_hpuih")
+sprite_frames = SubResource("SpriteFrames_8himk")
 animation = &"SmokeBack"
 script = ExtResource("2_nb6uh")
 json_path = "res://Textures/Effects/Smoke/SmokeBack.json"
@@ -455,35 +404,42 @@ smokeback_fps = 11.0
 [node name="EvilEnemy" parent="." unique_id=1788415153 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-508, 128)
+punch_windup_time = 0.5
 
 [node name="EvilEnemy4" parent="." unique_id=1458865535 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-502, -261)
+punch_windup_time = 0.5
 
 [node name="EvilEnemy5" parent="." unique_id=1565357951 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-89, -490)
+punch_windup_time = 0.5
 
 [node name="EvilEnemy6" parent="." unique_id=527930960 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-483, -307)
+punch_windup_time = 0.5
 
 [node name="EvilEnemy7" parent="." unique_id=1409770232 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-477, -543)
+punch_windup_time = 0.5
 
 [node name="EvilEnemy8" parent="." unique_id=1235489508 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-389, -641)
+punch_windup_time = 0.5
 
 [node name="EvilEnemy3" parent="." unique_id=571269743 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-416, -191)
+punch_windup_time = 0.5
 
 [node name="EvilEnemy2" parent="." unique_id=1882939303 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(771, -93)
-initial_facing_direction = -1
+punch_windup_time = 0.5
 
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/HOST" to="CanvasLayer" method="_on_host_pressed"]
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/JOIN" to="CanvasLayer" method="_on_join_pressed"]

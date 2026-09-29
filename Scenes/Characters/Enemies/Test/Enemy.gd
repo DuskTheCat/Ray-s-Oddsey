@@ -61,6 +61,9 @@ var is_landing_settled: bool = false
 var is_jumping_detour: bool = false
 var can_punch: bool = true
 var is_punching: bool = false
+var airborne_target_position: Vector2 = Vector2.ZERO
+var was_on_floor_last_frame: bool = true
+
 
 # --- Turning State Variables ---
 var current_facing_direction: float = 1.0
@@ -239,6 +242,10 @@ func _physics_process(delta: float) -> void:
 		if move_direction != 0.0:
 			_update_facing_orientation(move_direction)
 		return
+		
+	
+	ledge_check.scale.x = target_facing_direction
+	wall_check.scale.x = target_facing_direction
 
 	if current_state == State.DEAD:
 		_process_death_movement(delta)
@@ -415,6 +422,10 @@ func _process_normal_movement(delta: float) -> void:
 
 # --- AI Navigation Processing ---
 func _process_ai_navigation() -> void:
+	
+	if not LedgeRayCast.is_colliding():
+		jump()
+	
 	if not is_instance_valid(navigation_agent_2d):
 		return
 
@@ -511,6 +522,10 @@ func _process_ledge_movement() -> void:
 
 func _process_physics_object_movement(delta: float) -> void:
 	override_animations = true
+	
+	if is_on_floor():
+		if not LedgeRayCast.is_colliding():
+			jump()
 	
 	if not is_on_floor():
 		set_smoke_emitting(true)
