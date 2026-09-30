@@ -111,11 +111,6 @@ atlas = ExtResource("3_0gqhc")
 region = Rect2(1583, 453, 135, 242)
 margin = Rect2(369, 328, 743, 636)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_bfsmd"]
-atlas = ExtResource("3_0gqhc")
-region = Rect2(134, 198, 158, 226)
-margin = Rect2(356, 357, 720, 652)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_fwlpr"]
 atlas = ExtResource("3_0gqhc")
 region = Rect2(1254, 691, 152, 248)
@@ -383,9 +378,6 @@ animations = [{
 "speed": 8.0
 }, {
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bfsmd")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_fwlpr")
 }, {
@@ -711,7 +703,7 @@ z_index = -2
 position = Vector2(0, 0)
 
 [node name="DashTimeout" type="Timer" parent="." unique_id=945585457]
-wait_time = 0.5
+wait_time = 0.7
 one_shot = true
 
 [node name="FireFill" type="Timer" parent="." unique_id=395789355]
@@ -750,8 +742,7 @@ position = Vector2(0, 39)
 position = Vector2(0.99999034, -45.000008)
 scale = Vector2(0.36248603, 0.36248603)
 sprite_frames = SubResource("SpriteFrames_dvq0s")
-animation = &"Idle"
-frame_progress = 0.19570844
+animation = &"Jump"
 offset = Vector2(-1.2912111, -2.758667)
 
 [node name="InvincibilityTimer" type="Timer" parent="." unique_id=1230506164]

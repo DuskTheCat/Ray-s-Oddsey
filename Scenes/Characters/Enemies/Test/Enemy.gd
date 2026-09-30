@@ -138,7 +138,6 @@ func _ready() -> void:
 		if not punch_range_area.body_exited.is_connected(_on_punch_range_body_exited):
 			punch_range_area.body_exited.connect(_on_punch_range_body_exited)
 
-
 	if stun_time:
 		if not stun_time.timeout.is_connected(_on_stun_timeout):
 			stun_time.timeout.connect(_on_stun_timeout)
@@ -174,8 +173,8 @@ func _apply_initial_facing_direction() -> void:
 		sight.scale.x = dir_sign
 
 func _update_facing_orientation(dir_x: float) -> void:
-	
-	if !punch_windup_time.is_stopped():
+	# Lock orientation completely if attacking or winding up
+	if current_state == State.ATTACK or is_punching or !punch_windup_time.is_stopped():
 		return
 	
 	if dir_x == 0.0:
@@ -188,8 +187,10 @@ func _update_facing_orientation(dir_x: float) -> void:
 		turn_timer = turn_delay
 
 func _process_turn_delay(delta: float) -> void:
-	if !punch_windup_time.is_stopped():
+	# Lock turn execution mid-attack
+	if current_state == State.ATTACK or is_punching or !punch_windup_time.is_stopped():
 		return
+
 	if target_facing_direction != current_facing_direction:
 		turn_timer -= delta
 		if turn_timer <= 0.0:
@@ -263,9 +264,9 @@ func _physics_process(delta: float) -> void:
 			_update_facing_orientation(move_direction)
 		return
 		
-	ledge_check.scale.x = target_facing_direction
-	wall_check.scale.x = target_facing_direction
-	punch_hitbox.scale.x = target_facing_direction
+	ledge_check.scale.x = current_facing_direction
+	wall_check.scale.x = current_facing_direction
+	punch_hitbox.scale.x = current_facing_direction
 
 	if current_state == State.DEAD:
 		_process_death_movement(delta)
@@ -287,11 +288,9 @@ func _physics_process(delta: float) -> void:
 		var collision = get_slide_collision(i)
 		var collider = collision.get_collider()
 		
-		# Ensure we are colliding with another enemy
 		if collider is CharacterBody2D:
 			var push_dir = -collision.get_normal()
 			collider.velocity += push_dir * (push_force * UNIT_SCALE)
-
 
 
 # --- Perception, Vision & Alert System ---
@@ -414,10 +413,6 @@ func punch() -> void:
 	current_state = State.ATTACK
 	move_direction = 0.0
 
-	if is_instance_valid(Target):
-		var face_dir: float = Target.global_position.x - global_position.x
-		_update_facing_orientation(face_dir)
-
 	override_animations = true
 	play_animation_once("Idle")
 	punch_windup_time.start()
@@ -426,10 +421,6 @@ func punch() -> void:
 	if current_state == State.STUNNED or current_state == State.DEAD:
 		_reset_attack_state()
 		return
-
-	if is_instance_valid(Target):
-		var face_dir: float = Target.global_position.x - global_position.x
-		_update_facing_orientation(face_dir)
 
 	play_animation_once("Punch1")
 	punch_hitbox_activate(0.2)
@@ -509,11 +500,11 @@ func _process_normal_movement(delta: float) -> void:
 
 # --- AI Navigation Processing ---
 func _process_ai_navigation() -> void:
-	LedgeRayCast.force_raycast_update()
-
-	if not LedgeRayCast.is_colliding() and navigation_agent_2d.target_position.y < position.y:
-		if is_on_floor() and not _is_ceiling_above():
-			jump()
+	if is_instance_valid(LedgeRayCast):
+		LedgeRayCast.force_raycast_update()
+		if not LedgeRayCast.is_colliding() and navigation_agent_2d.target_position.y < position.y:
+			if is_on_floor() and not _is_ceiling_above():
+				jump()
 
 	if not is_instance_valid(navigation_agent_2d):
 		return
@@ -613,7 +604,7 @@ func _process_physics_object_movement(delta: float) -> void:
 	override_animations = true
 	
 	if is_on_floor():
-		if not LedgeRayCast.is_colliding():
+		if LedgeRayCast and not LedgeRayCast.is_colliding():
 			jump()
 	
 	if not is_on_floor():
@@ -726,7 +717,6 @@ func request_damage(amount: float, origin: Vector2, velocity_multiplier: float, 
 		
 	var attacker: CharacterBody2D = get_node_or_null(attacker_path) as CharacterBody2D
 	damage(amount, origin, velocity_multiplier, attacker)
-	
 
 func damage(amount: float, origin: Vector2, velocity_multiplier: float, attacker: CharacterBody2D = null) -> void:
 	if current_state == State.DEAD:
@@ -752,7 +742,6 @@ func damage(amount: float, origin: Vector2, velocity_multiplier: float, attacker
 	.set_trans(Tween.TRANS_QUAD)
 	damagetween.play()
 	
-	
 	if health <= 0.0:
 		_sync_die.rpc(origin)
 	else:
@@ -760,14 +749,14 @@ func damage(amount: float, origin: Vector2, velocity_multiplier: float, attacker
 		if origin != Vector2.ZERO:
 			var dir_x: float = 1.0 if origin.x < global_position.x else -1.0
 			apply_impulse(Vector2(dir_x * 2.5 * velocity_multiplier, -3.0), 0.4)
-				
+
 @rpc("authority", "call_local", "reliable")
 func _spawn_hit_effect(origin: Vector2) -> void:
 	var effect : Node = PUNCH_EFFECT.instantiate()
 	effect.global_position = global_position
 	effect.global_position.x += randi_range(-5,5)
 	effect.global_position.y += randi_range(-5,5)
-	effect.scale *= randi_range(1, 1.5)
+	effect.scale *= randi_range(1, 2.4)
 	effect.look_at(origin)
 	
 	get_tree().root.add_child(effect)

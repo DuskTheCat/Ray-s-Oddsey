@@ -284,6 +284,15 @@ func _input(event: InputEvent) -> void:
 			
 	if event.is_action_pressed("Punch"):
 		punch()
+		
+	# --- VARIABLE JUMP HEIGHT LOGIC ---
+	if event.is_action_released("Jump"):
+		# Only cut momentum if the player is actively rising (moving upward)
+		if velocity.y < 0.0:
+			# Mulitply or clamp the velocity to cut the upward rise cleanly.
+			# Setting to a small downward value or near zero allows gravity 
+			# in _physics_process() to naturally pull the player down.
+			velocity.y = max(velocity.y, jump_velocity * UNIT_SCALE * 0.25)
 
 # --- Animation Handling ---
 func update_animation() -> void:
@@ -331,7 +340,7 @@ func dash() -> void:
 		if fire < 20: return
 		fire -= 20.0
 		dash_timeout.start(0.2)
-		dash_timeout.wait_time = 0.5
+		dash_timeout.wait_time = 0.7
 		current_movement_state = MovementState.NORMAL
 		velocity.y = -dash_velocity * UNIT_SCALE
 		can_dash = false
@@ -464,7 +473,7 @@ func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: f
 
 	Health = max(Health - value, 0.0)
 	_play_hit_flash.rpc()
-	apply_shake(400)
+	apply_shake(40000)
 
 	if Health <= 0.0:
 		_sync_die.rpc(origin)
