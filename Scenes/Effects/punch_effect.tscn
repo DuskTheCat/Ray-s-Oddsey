@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://dd6roex7pwm7n"]
+
+[ext_resource type="Script" uid="uid://b843xhd3flwyh" path="res://Scripts/Reusable/SingleParticle.gd" id="1_fk77e"]
+[ext_resource type="Texture2D" uid="uid://ckc0y1tg54kn4" path="res://Textures/Effects/PunchEffect/PunchEffect.png" id="2_oe7uy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ld5gj"]
+atlas = ExtResource("2_oe7uy")
+region = Rect2(0, 0, 76, 161)
+margin = Rect2(90, 94, 180, 95)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45ey1"]
+atlas = ExtResource("2_oe7uy")
+region = Rect2(76, 0, 154, 234)
+margin = Rect2(50, 14, 102, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ia7pv"]
+atlas = ExtResource("2_oe7uy")
+region = Rect2(460, 0, 230, 241)
+margin = Rect2(12, 4, 26, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2oqj"]
+atlas = ExtResource("2_oe7uy")
+region = Rect2(690, 0, 230, 242)
+margin = Rect2(12, 0, 26, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nyw5m"]
+atlas = ExtResource("2_oe7uy")
+region = Rect2(230, 0, 230, 240)
+margin = Rect2(12, 0, 26, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_028lf"]
+atlas = ExtResource("2_oe7uy")
+region = Rect2(920, 0, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fu6yv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ld5gj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45ey1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ia7pv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2oqj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nyw5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_028lf")
+}],
+"loop": 0,
+"name": &"PunchEffect",
+"speed": 13.0
+}]
+
+[node name="SingleParticle" type="Node2D" unique_id=1179242068 node_paths=PackedStringArray("sprite")]
+z_index = 3
+script = ExtResource("1_fk77e")
+sprite = NodePath("AnimatedSprite2D")
+auto_play_animation = "PunchEffect"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1058547866]
+rotation = -1.5707964
+scale = Vector2(0.465, 0.465)
+sprite_frames = SubResource("SpriteFrames_fu6yv")
+animation = &"PunchEffect"
+offset = Vector2(0, -128)

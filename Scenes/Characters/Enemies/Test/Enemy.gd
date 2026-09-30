@@ -4,6 +4,7 @@ extends CharacterBody2D
 # --- Constants & Enums ---
 const UNIT_SCALE: float = 100.0
 const EXPLOSION: PackedScene = preload("res://Scenes/Effects/explosion.tscn")
+const PUNCH_EFFECT: PackedScene = preload("res://Scenes/Effects/punch_effect.tscn")
 
 enum State { IDLE, PATROL, CHASE, ATTACK, STUNNED, DEAD }
 enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
@@ -15,6 +16,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var Target: CharacterBody2D
 @export var target_scene: PackedScene
 @export var turn_delay: float = 0.5 # --- Time required to switch directions ---
+@export var alert_delay: float = 0.2 # --- Delay before alerting allies & chasing ---
 
 # --- Export Variables ---
 @export_group("Movement")
@@ -33,10 +35,12 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var min_health: float = 100.0
 @export var attack_damage: float = 15.0
 @export var attack_cooldown_time: float = 1.0
-@export var punch_windup_time: float = 0.5
 @export var bounciness: float = 0.35
 @export var physics_friction: float = 10.0
 @export var hit_camera_shake: float = 0.35
+@export var can_punch_in_air: bool = false
+@export var push_force: float = 2.0
+@export var hurtbox_pushback_force: float = 2.5
 
 @export_group("Death Impulse")
 @export var death_launch_force: Vector2 = Vector2(5.0, -8.0)
@@ -63,17 +67,21 @@ var can_punch: bool = true
 var is_punching: bool = false
 var airborne_target_position: Vector2 = Vector2.ZERO
 var was_on_floor_last_frame: bool = true
-
+var damagetween: Tween
+var oldmodulate = modulate
 
 # --- Turning State Variables ---
 var current_facing_direction: float = 1.0
 var target_facing_direction: float = 1.0
 var turn_timer: float = 0.0
 
-# --- Aggro System ---
+# --- Aggro & Alert System ---
 var last_attacker: CharacterBody2D = null
 var targets_in_sight: Array[CharacterBody2D] = []
 var targets_in_punch_range: Array[CharacterBody2D] = []
+var pending_alert_target: CharacterBody2D = null
+var alert_timer: float = 0.0
+var has_alerted: bool = false
 
 # --- Advanced Link & Platform Traversal ---
 var is_traversing_link: bool = false
@@ -92,6 +100,8 @@ var link_target_velocity_x: float = 0.0
 @onready var ledge_check: Node2D = $LedgeCheck
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 
+@onready var punch_windup_time: Timer = $PunchWindUp
+
 @onready var sight: Area2D = $Sight
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 
@@ -99,6 +109,9 @@ var link_target_velocity_x: float = 0.0
 @onready var punch_range_area: Area2D = $PunchHitbox
 
 @onready var stun_time: Timer = $StunTime
+@onready var alert_call: Area2D = $AlertCall
+
+@onready var hurt_box: Area2D = $HurtBox
 
 
 func _enter_tree() -> void:
@@ -124,6 +137,7 @@ func _ready() -> void:
 			punch_range_area.body_entered.connect(_on_punch_range_body_entered)
 		if not punch_range_area.body_exited.is_connected(_on_punch_range_body_exited):
 			punch_range_area.body_exited.connect(_on_punch_range_body_exited)
+
 
 	if stun_time:
 		if not stun_time.timeout.is_connected(_on_stun_timeout):
@@ -160,6 +174,10 @@ func _apply_initial_facing_direction() -> void:
 		sight.scale.x = dir_sign
 
 func _update_facing_orientation(dir_x: float) -> void:
+	
+	if !punch_windup_time.is_stopped():
+		return
+	
 	if dir_x == 0.0:
 		return
 		
@@ -167,9 +185,11 @@ func _update_facing_orientation(dir_x: float) -> void:
 	
 	if new_target_sign != target_facing_direction:
 		target_facing_direction = new_target_sign
-		turn_timer = turn_delay # Start countdown timer
+		turn_timer = turn_delay
 
 func _process_turn_delay(delta: float) -> void:
+	if !punch_windup_time.is_stopped():
+		return
 	if target_facing_direction != current_facing_direction:
 		turn_timer -= delta
 		if turn_timer <= 0.0:
@@ -235,7 +255,7 @@ func _on_node_added(node: Node) -> void:
 			get_tree().node_added.disconnect(_on_node_added)
 
 func _physics_process(delta: float) -> void:
-	_process_turn_delay(delta) # Tick turn delay down every physics frame
+	_process_turn_delay(delta)
 
 	if not multiplayer.is_server():
 		update_animation()
@@ -243,15 +263,16 @@ func _physics_process(delta: float) -> void:
 			_update_facing_orientation(move_direction)
 		return
 		
-	
 	ledge_check.scale.x = target_facing_direction
 	wall_check.scale.x = target_facing_direction
+	punch_hitbox.scale.x = target_facing_direction
 
 	if current_state == State.DEAD:
 		_process_death_movement(delta)
 		return
 
-	_check_line_of_sight()
+	_check_line_of_sight(targets_in_sight)
+	_process_alert_delay(delta)
 	_check_punch_range()
 
 	match current_movement_state:
@@ -261,8 +282,19 @@ func _physics_process(delta: float) -> void:
 			_process_ledge_movement()
 		MovementState.PHYSICS_OBJECT:
 			_process_physics_object_movement(delta)
+			
+	for i in range(get_slide_collision_count()):
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
+		
+		# Ensure we are colliding with another enemy
+		if collider is CharacterBody2D:
+			var push_dir = -collision.get_normal()
+			collider.velocity += push_dir * (push_force * UNIT_SCALE)
 
-# --- Perception & Vision System ---
+
+
+# --- Perception, Vision & Alert System ---
 func _on_sight_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D and body.is_in_group("Player"):
 		if not targets_in_sight.has(body):
@@ -271,14 +303,21 @@ func _on_sight_body_entered(body: Node2D) -> void:
 func _on_sight_body_exited(body: Node2D) -> void:
 	if body is CharacterBody2D and targets_in_sight.has(body):
 		targets_in_sight.erase(body)
+		if pending_alert_target == body:
+			_cancel_alert()
 
-func _check_line_of_sight() -> void:
-	if targets_in_sight.is_empty() or not ray_cast_2d:
+func _check_line_of_sight(targets: Array) -> void:
+	if current_state == State.STUNNED or current_state == State.DEAD:
 		return
 
-	targets_in_sight = targets_in_sight.filter(func(b): return is_instance_valid(b))
+	if targets.is_empty() or not ray_cast_2d:
+		return
 
-	for potential_target in targets_in_sight:
+	targets = targets.filter(func(b): return is_instance_valid(b))
+
+	var visible_target: CharacterBody2D = null
+
+	for potential_target in targets:
 		ray_cast_2d.global_position = global_position
 		ray_cast_2d.target_position = ray_cast_2d.to_local(potential_target.global_position)
 		ray_cast_2d.force_raycast_update()
@@ -286,10 +325,62 @@ func _check_line_of_sight() -> void:
 		if ray_cast_2d.is_colliding():
 			var collider := ray_cast_2d.get_collider()
 			if collider == potential_target:
-				Target = potential_target
-				if current_state != State.ATTACK and current_state != State.STUNNED:
-					current_state = State.CHASE
+				visible_target = potential_target
 				break
+
+	if visible_target:
+		Target = visible_target
+		if current_state != State.ATTACK and current_state != State.CHASE:
+			if pending_alert_target != visible_target and not has_alerted:
+				pending_alert_target = visible_target
+				alert_timer = alert_delay
+	else:
+		if pending_alert_target != null:
+			_cancel_alert()
+
+func _process_alert_delay(delta: float) -> void:
+	if pending_alert_target != null and is_instance_valid(pending_alert_target):
+		alert_timer -= delta
+		if alert_timer <= 0.0:
+			_execute_alert(pending_alert_target)
+
+func _execute_alert(target_node: CharacterBody2D) -> void:
+	has_alerted = true
+	pending_alert_target = null
+	alert_nearby_enemies(target_node)
+	
+	if current_state != State.ATTACK and current_state != State.STUNNED and current_state != State.DEAD:
+		current_state = State.CHASE
+
+func alert_nearby_enemies(target_to_alert: CharacterBody2D) -> void:
+	if not alert_call:
+		return
+
+	var overlapping_areas := alert_call.get_overlapping_areas()
+	for area in overlapping_areas:
+		var parent := area.get_parent()
+		if parent is EnemyBase and parent != self and is_instance_valid(parent):
+			parent.receive_alert(target_to_alert)
+
+	var overlapping_bodies := alert_call.get_overlapping_bodies()
+	for body in overlapping_bodies:
+		if body is EnemyBase and body != self and is_instance_valid(body):
+			body.receive_alert(target_to_alert)
+
+func receive_alert(target_node: CharacterBody2D) -> void:
+	if current_state == State.DEAD or current_state == State.STUNNED:
+		return
+
+	if is_instance_valid(target_node):
+		Target = target_node
+		has_alerted = true
+		if current_state != State.ATTACK:
+			current_state = State.CHASE
+
+func _cancel_alert() -> void:
+	pending_alert_target = null
+	alert_timer = 0.0
+	has_alerted = false
 
 # --- Punch Detection & Attack Logic ---
 func _on_punch_range_body_entered(body: Node2D) -> void:
@@ -309,7 +400,7 @@ func _check_punch_range() -> void:
 	
 	if not targets_in_punch_range.is_empty():
 		Target = targets_in_punch_range[0]
-		if can_punch and not is_punching:
+		if can_punch and not is_punching and is_on_floor():
 			punch()
 	elif current_state == State.ATTACK and not is_punching:
 		current_state = State.CHASE if is_instance_valid(Target) else State.IDLE
@@ -323,30 +414,26 @@ func punch() -> void:
 	current_state = State.ATTACK
 	move_direction = 0.0
 
-	# Queue turn direction towards player
 	if is_instance_valid(Target):
 		var face_dir: float = Target.global_position.x - global_position.x
 		_update_facing_orientation(face_dir)
 
-	# --- 1. WIND-UP PHASE ---
 	override_animations = true
 	play_animation_once("Idle")
-	await get_tree().create_timer(punch_windup_time).timeout
+	punch_windup_time.start()
+	await punch_windup_time.timeout
 
 	if current_state == State.STUNNED or current_state == State.DEAD:
 		_reset_attack_state()
 		return
 
-	# Re-check facing direction before punch execution
 	if is_instance_valid(Target):
 		var face_dir: float = Target.global_position.x - global_position.x
 		_update_facing_orientation(face_dir)
 
-	# --- 2. EXECUTE PUNCH ---
 	play_animation_once("Punch1")
 	punch_hitbox_activate(0.2)
 
-	# --- 3. COOLDOWN PHASE ---
 	await get_tree().create_timer(attack_cooldown_time).timeout
 	_reset_attack_state()
 
@@ -422,10 +509,12 @@ func _process_normal_movement(delta: float) -> void:
 
 # --- AI Navigation Processing ---
 func _process_ai_navigation() -> void:
-	
-	if not LedgeRayCast.is_colliding():
-		jump()
-	
+	LedgeRayCast.force_raycast_update()
+
+	if not LedgeRayCast.is_colliding() and navigation_agent_2d.target_position.y < position.y:
+		if is_on_floor() and not _is_ceiling_above():
+			jump()
+
 	if not is_instance_valid(navigation_agent_2d):
 		return
 
@@ -611,6 +700,7 @@ func apply_stun() -> void:
 
 	is_punching = false
 	can_punch = true
+	_cancel_alert()
 
 	current_state = State.STUNNED
 	move_direction = 0.0
@@ -630,35 +720,57 @@ func _on_stun_timeout() -> void:
 		current_state = State.CHASE if is_instance_valid(Target) else State.IDLE
 
 @rpc("any_peer", "call_local", "reliable")
-func request_damage(amount: float, origin: Vector2, velocit_multiplier: float, attacker_path: NodePath = NodePath("")) -> void:
+func request_damage(amount: float, origin: Vector2, velocity_multiplier: float, attacker_path: NodePath = NodePath("")) -> void:
 	if not multiplayer.is_server():
 		return
 		
 	var attacker: CharacterBody2D = get_node_or_null(attacker_path) as CharacterBody2D
-	damage(amount, origin, velocit_multiplier, attacker)
+	damage(amount, origin, velocity_multiplier, attacker)
+	
 
-func damage(amount: float, origin: Vector2, velocit_multiplier: float, attacker: CharacterBody2D = null) -> void:
+func damage(amount: float, origin: Vector2, velocity_multiplier: float, attacker: CharacterBody2D = null) -> void:
 	if current_state == State.DEAD:
 		return
 
 	if is_instance_valid(attacker):
 		last_attacker = attacker
 		Target = attacker
+		receive_alert(attacker)
 
 	health = clamp(health - amount, 0.0, max_health)
 	_play_hit_flash.rpc()
+	
+	_spawn_hit_effect.rpc(origin)
+	
+	if damagetween and damagetween.is_running():
+		damagetween.kill()
+	
+	damagetween = create_tween()
+	modulate = Color.RED
+	damagetween.tween_property(self, "modulate", oldmodulate, 1)\
+	.set_ease(Tween.EASE_OUT)\
+	.set_trans(Tween.TRANS_QUAD)
+	damagetween.play()
+	
 	
 	if health <= 0.0:
 		_sync_die.rpc(origin)
 	else:
 		apply_stun()
 		if origin != Vector2.ZERO:
-			if origin.x < global_position.x:
-				global_position.y += 10
-				apply_impulse(Vector2(4 * velocit_multiplier, -2 * velocit_multiplier), 0.4)
-			elif origin.x > global_position.x:
-				global_position.y += 10
-				apply_impulse(Vector2(-4 * velocit_multiplier, -2 * velocit_multiplier), 0.4)
+			var dir_x: float = 1.0 if origin.x < global_position.x else -1.0
+			apply_impulse(Vector2(dir_x * 2.5 * velocity_multiplier, -3.0), 0.4)
+				
+@rpc("authority", "call_local", "reliable")
+func _spawn_hit_effect(origin: Vector2) -> void:
+	var effect : Node = PUNCH_EFFECT.instantiate()
+	effect.global_position = global_position
+	effect.global_position.x += randi_range(-5,5)
+	effect.global_position.y += randi_range(-5,5)
+	effect.scale *= randi_range(1, 1.5)
+	effect.look_at(origin)
+	
+	get_tree().root.add_child(effect)
 
 @rpc("authority", "call_local", "reliable")
 func _play_hit_flash() -> void:
@@ -676,6 +788,7 @@ func _sync_die(origin: Vector2 = Vector2.ZERO) -> void:
 func die(origin: Vector2 = Vector2.ZERO) -> void:
 	current_state = State.DEAD
 	override_animations = true
+	_cancel_alert()
 	
 	set_collision_mask_value(2, false)
 	set_collision_mask_value(3, false)

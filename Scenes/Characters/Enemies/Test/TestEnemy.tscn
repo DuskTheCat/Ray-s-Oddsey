@@ -519,7 +519,7 @@ animations = [{
 size = Vector2(56, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ut5v"]
-size = Vector2(52, 59)
+size = Vector2(71, 59)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ykv2e"]
 radius = 15.0
@@ -551,6 +551,9 @@ properties/7/path = NodePath(".:health")
 properties/7/spawn = true
 properties/7/replication_mode = 1
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_xhsim"]
+radius = 294.4911
+
 [node name="EvilEnemy" type="CharacterBody2D" unique_id=1788415153 groups=["Enemy", "Entity"]]
 collision_layer = 2
 collision_mask = 4
@@ -562,7 +565,7 @@ offset_left = -20.0
 offset_top = -36.0
 offset_right = 21.0
 offset_bottom = 37.058823
-color = Color(1, 0, 0, 1)
+color = Color(1, 0.7405732, 0.69833827, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="SpriteSheet" type="AnimatedSprite2D" parent="." unique_id=1358705930]
@@ -604,13 +607,16 @@ one_shot = true
 one_shot = true
 
 [node name="PunchHitbox" type="Area2D" parent="." unique_id=85656686]
+visible = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitbox" unique_id=1205447313]
-position = Vector2(41, 3.5)
+position = Vector2(31.5, 3.5)
 shape = SubResource("RectangleShape2D_1ut5v")
 
 [node name="HurtBox" type="Area2D" parent="." unique_id=500066317]
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox" unique_id=238982729]
 shape = SubResource("CapsuleShape2D_ykv2e")
@@ -622,11 +628,9 @@ shape = SubResource("CapsuleShape2D_ykv2e")
 target_desired_distance = 24.0
 navigation_layers = 4
 simplify_path = true
-avoidance_enabled = true
 radius = 16.0
 avoidance_layers = 2
 avoidance_mask = 2
-debug_enabled = true
 
 [node name="WallCheck" type="Node2D" parent="." unique_id=743923932]
 
@@ -660,6 +664,20 @@ collision_mask = 5
 
 [node name="StunTime" type="Timer" parent="." unique_id=412853335]
 wait_time = 0.5
+one_shot = true
+
+[node name="AlertCall" type="Area2D" parent="." unique_id=23042509]
+visible = false
+collision_layer = 2
+collision_mask = 2
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AlertCall" unique_id=1530013546]
+shape = SubResource("CircleShape2D_xhsim")
+
+[node name="PunchWindUp" type="Timer" parent="." unique_id=1518242052]
+wait_time = 0.25
 one_shot = true
 
 [connection signal="area_entered" from="LedgeDetecorArea" to="." method="_on_ledge_detecor_area_area_entered"]

@@ -44,7 +44,7 @@ properties/6/spawn = true
 properties/6/replication_mode = 1
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ut5v"]
-size = Vector2(52, 59)
+size = Vector2(70, 59)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lmyrk"]
 atlas = ExtResource("3_0gqhc")
@@ -735,7 +735,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitbox" unique_id=1205447313]
-position = Vector2(41, 3.5)
+position = Vector2(32, 3.5)
 shape = SubResource("RectangleShape2D_1ut5v")
 
 [node name="HurtBox" type="Area2D" parent="." unique_id=816138609]
@@ -756,6 +756,14 @@ offset = Vector2(-1.2912111, -2.758667)
 
 [node name="InvincibilityTimer" type="Timer" parent="." unique_id=1230506164]
 wait_time = 3.0
+one_shot = true
+
+[node name="CoyoteTime" type="Timer" parent="." unique_id=965813376]
+wait_time = 0.15
+one_shot = true
+
+[node name="JumpBuffer" type="Timer" parent="." unique_id=1424047968]
+wait_time = 0.2
 one_shot = true
 
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]

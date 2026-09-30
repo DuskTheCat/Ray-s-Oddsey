@@ -318,7 +318,7 @@ animations = [{
 [node name="Node" type="Node2D" unique_id=476923287]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1954018795 node_paths=PackedStringArray("Spawn_Node")]
-_spawnable_scenes = PackedStringArray("uid://bbcngyxgka3pb", "uid://b22bq3qyfh1b6", "uid://b40tmrjat0rwd")
+_spawnable_scenes = PackedStringArray("uid://bbcngyxgka3pb", "uid://b22bq3qyfh1b6", "uid://b40tmrjat0rwd", "uid://dd6roex7pwm7n")
 spawn_path = NodePath("..")
 spawn_limit = 2
 script = ExtResource("4_bbdmo")
@@ -404,42 +404,34 @@ smokeback_fps = 11.0
 [node name="EvilEnemy" parent="." unique_id=1788415153 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-508, 128)
-punch_windup_time = 0.5
 
 [node name="EvilEnemy4" parent="." unique_id=1458865535 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-502, -261)
-punch_windup_time = 0.5
 
 [node name="EvilEnemy5" parent="." unique_id=1565357951 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-89, -490)
-punch_windup_time = 0.5
 
 [node name="EvilEnemy6" parent="." unique_id=527930960 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-483, -307)
-punch_windup_time = 0.5
 
 [node name="EvilEnemy7" parent="." unique_id=1409770232 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-477, -543)
-punch_windup_time = 0.5
 
 [node name="EvilEnemy8" parent="." unique_id=1235489508 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-389, -641)
-punch_windup_time = 0.5
 
 [node name="EvilEnemy3" parent="." unique_id=571269743 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(-416, -191)
-punch_windup_time = 0.5
 
 [node name="EvilEnemy2" parent="." unique_id=1882939303 instance=ExtResource("6_nb6uh")]
 z_index = 1
 position = Vector2(771, -93)
-punch_windup_time = 0.5
 
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/HOST" to="CanvasLayer" method="_on_host_pressed"]
 [connection signal="pressed" from="CanvasLayer/NetworkUI/VBoxContainer/JOIN" to="CanvasLayer" method="_on_join_pressed"]

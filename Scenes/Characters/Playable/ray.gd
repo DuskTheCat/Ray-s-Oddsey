@@ -41,7 +41,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 		fire = value
 		if is_instance_valid(fire_bar):
 			fire_bar.value = value
-@export var punch_dash_speed: float = 5.0
+@export var punch_dash_speed: float = 7.5
 
 @export_group("Death Impulse")
 @export var death_launch_force: Vector2 = Vector2(4.0, -7.0)
@@ -78,6 +78,8 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var punch_cooldown: Timer = $PunchCooldown
 @onready var punch_hitbox: Area2D = $PunchHitbox
 @onready var invincibility_timer: Timer = $InvincibilityTimer
+@onready var coyote_time: Timer = $CoyoteTime
+@onready var jump_buffer: Timer = $JumpBuffer
 
 # --- Private / Runtime Variables ---
 var current_speed: float = 1.4
@@ -94,6 +96,7 @@ var combo_count: int = 0
 var can_punch: bool = true
 var old_speed: float = -1.0
 var is_invincible: bool = false
+var is_in_ledge: bool = false
 
 # Shake variables
 var shake_trauma: float = 0.0
@@ -170,11 +173,23 @@ func _physics_process(delta: float) -> void:
 		var is_upward_dashing: bool = not can_dash and not dash_timeout.is_stopped()
 		set_smoke_emitting(is_upward_dashing)
 		
+		var was_on_floor : bool = is_on_floor()
+		
 		if not is_on_floor():
 			velocity += (get_gravity() * gravity_multiplier) * delta
-			
-		if Input.is_action_just_pressed("Jump") and is_on_floor():
+
+		# --- Jump Buffer & Coyote Time Logic ---
+		if Input.is_action_just_pressed("Jump"):
+			jump_buffer.start()
+
+		var can_jump: bool = is_on_floor() or not coyote_time.is_stopped()
+		var has_buffered_jump: bool = not jump_buffer.is_stopped()
+
+		if has_buffered_jump and can_jump:
 			velocity.y = jump_velocity * UNIT_SCALE
+			coyote_time.stop()
+			jump_buffer.stop()
+		# ---------------------------------------
 			
 		var direction := Input.get_axis("Move_Left", "Move_Right")
 		var accel := (acceleration if is_on_floor() else air_acceleration) * UNIT_SCALE
@@ -191,6 +206,9 @@ func _physics_process(delta: float) -> void:
 		update_animation()
 		update_camera_extent(direction)
 		last_direction = direction
+		
+		if was_on_floor and not is_on_floor() and velocity.y >= 0:
+			coyote_time.start()
 		
 	elif current_movement_state == MovementState.ON_LEDGE:
 		velocity = Vector2.ZERO
@@ -245,6 +263,7 @@ func _physics_process(delta: float) -> void:
 				set_smoke_emitting(false)
 				
 		update_animation()
+
 
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority() or current_state == State.DEAD:
@@ -303,13 +322,16 @@ func dash() -> void:
 	if not dash_timeout.is_stopped() or (current_movement_state == MovementState.PHYSICS_OBJECT and not is_ground_dashing):
 		return
 		
+	is_in_ledge = false
+		
 	if modulate_tween and modulate_tween.is_running():
 		modulate_tween.kill()
 		
 	if Input.is_action_pressed("Move_Up"):
 		if fire < 20: return
 		fire -= 20.0
-		dash_timeout.start(0.3)
+		dash_timeout.start(0.2)
+		dash_timeout.wait_time = 0.5
 		current_movement_state = MovementState.NORMAL
 		velocity.y = -dash_velocity * UNIT_SCALE
 		can_dash = false
@@ -327,11 +349,11 @@ func dash() -> void:
 		)
 		return
 		
-	dash_timeout.start()
 	ground_dash_direction = -1.0 if sprite.flip_h else 1.0
 	var launch_vector := Vector2(ground_dash_direction * dash_velocity, 0.0)
 	
 	if is_on_floor():
+		dash_timeout.start()
 		is_ground_dashing = true
 		apply_physics_impulse(launch_vector, false)
 		override_animations = true
@@ -359,6 +381,7 @@ func dash() -> void:
 			modulate_tween = create_tween()
 			modulate_tween.tween_property(sprite, "self_modulate", Color.WHITE, 0.15)
 		else:
+			dash_timeout.start(0.3)
 			is_ground_dashing = false
 			is_air_dash_ragdoll = true 
 			
@@ -394,6 +417,7 @@ func apply_physics_impulse(impulse_velocity: Vector2, from_air_dash: bool = fals
 
 func grab_ledge() -> void:
 	if not is_multiplayer_authority(): return
+	is_in_ledge = true
 	current_movement_state = MovementState.ON_LEDGE
 	velocity = Vector2.ZERO
 	dash_timeout.stop()
@@ -401,6 +425,7 @@ func grab_ledge() -> void:
 
 func exit_ledge() -> void:
 	if not is_multiplayer_authority(): return
+	is_in_ledge = false
 	ledge_timeout.start()
 	current_movement_state = MovementState.NORMAL
 	velocity.y = jump_velocity * UNIT_SCALE
@@ -560,32 +585,33 @@ func _on_fire_fill_timeout() -> void:
 
 # --- Punch Implementation ---
 func punch() -> void:
-	if not can_punch or current_state == State.DEAD:
+	if not can_punch or current_state != State.NORMAL or is_in_ledge:
 		return
 		
 	can_punch = false
 	punch_cooldown.start()
 	
-	if old_speed < 0.0:
-		old_speed = speed_multiplier
-	speed_multiplier = 0.0
-	
 	punch_timeout.start()
 	combo_count = (combo_count % 4) + 1
 	
 	if combo_count == 4:
-		if fire > 20:
-			fire -= 20
+		if fire > 10:
+			fire -= 10
 		else:
 			combo_count = 1
 	else:
 		punch_hitbox_activate(0.15)
+		
 	
 	var current_step: int = combo_count
 	override_animations = true
 	
-	var forward_direction: float = -1.0 if sprite.flip_h else 1.0
-	velocity.x = forward_direction * (punch_dash_speed * UNIT_SCALE)
+	if is_on_floor():
+		if old_speed < 0.0:
+			old_speed = speed_multiplier
+			speed_multiplier = 0.0
+		var forward_direction: float = -1.0 if sprite.flip_h else 1.0
+		velocity.x = forward_direction * (punch_dash_speed * UNIT_SCALE)
 	
 	match current_step:
 		1: play_animation_once("Punch1")
@@ -612,7 +638,7 @@ func punch_hitbox_activate(linger: float) -> void:
 	hitbox.queue_free()
 
 func _execute_finisher() -> void:
-	var timer = get_tree().create_timer(0.1)
+	var timer = get_tree().create_timer(0.2)
 	await timer.timeout
 	if not is_inside_tree(): 
 		return
@@ -640,5 +666,5 @@ func _on_punch_hitbox_area_entered(area: Area2D) -> void:
 			apply_shake(100)
 			print("Hit!")
 			var direction = -1.0 if sprite.flip_h else 1.0
-			velocity.y = -3 * UNIT_SCALE
-			velocity.x = (2 * UNIT_SCALE) * direction
+			velocity.y = -1 * UNIT_SCALE
+			velocity.x = (1 * UNIT_SCALE) * direction
