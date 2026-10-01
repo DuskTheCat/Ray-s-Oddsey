@@ -742,7 +742,7 @@ position = Vector2(0, 39)
 position = Vector2(0.99999034, -45.000008)
 scale = Vector2(0.36248603, 0.36248603)
 sprite_frames = SubResource("SpriteFrames_dvq0s")
-animation = &"Jump"
+animation = &"Idle"
 offset = Vector2(-1.2912111, -2.758667)
 
 [node name="InvincibilityTimer" type="Timer" parent="." unique_id=1230506164]

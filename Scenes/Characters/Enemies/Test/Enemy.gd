@@ -31,7 +31,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var air_deceleration: float = 5.0
 
 @export_group("Combat & Physics")
-@export var max_health: float = 200.0
+@export var max_health: float = 100.0
 @export var min_health: float = 100.0
 @export var attack_damage: float = 15.0
 @export var attack_cooldown_time: float = 1.0
@@ -92,6 +92,8 @@ var link_target_velocity_x: float = 0.0
 @onready var smoke: GPUParticles2D = get_node_or_null("Smoke/Smoke")
 @onready var smoke_2: GPUParticles2D = get_node_or_null("Smoke/Smoke2")
 @onready var sprite: AnimatedSprite2D = $SpriteSheet
+@onready var sprite_place_holder: ColorRect = $SpritePlaceHolder
+
 @onready var ledge_timeout: Timer = get_node_or_null("LedgeTimeout")
 
 @onready var WallRaycast: RayCast2D = $WallCheck/RayCast2D
@@ -114,10 +116,13 @@ var link_target_velocity_x: float = 0.0
 @onready var hurt_box: Area2D = $HurtBox
 
 
+
 func _enter_tree() -> void:
 	set_multiplayer_authority(1)
 
 func _ready() -> void:
+	self_modulate = Color.TRANSPARENT
+	
 	current_facing_direction = float(initial_facing_direction)
 	target_facing_direction = current_facing_direction
 	_apply_initial_facing_direction()
@@ -844,3 +849,13 @@ func spawn_explosion() -> void:
 		var explosion := EXPLOSION.instantiate() as Node2D
 		explosion.global_position = global_position
 		get_tree().root.add_child(explosion)
+
+
+func _on_visible_on_screen_notifier_2d_screen_entered() -> void:
+	self_modulate = oldmodulate
+	print("show")
+
+
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	self_modulate = Color.TRANSPARENT
+	print("hide")

@@ -33,7 +33,6 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var max_fire: float = 100.0
 @export var dash_velocity: float = 10.0
 @export var dash_time: float = 0.2
-@export var air_dash_ragdolls: bool = true
 @export var bounciness: float = 0.35
 @export var physics_friction: float = 10.0
 @export var fire: float = 100.0:
@@ -42,6 +41,11 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 		if is_instance_valid(fire_bar):
 			fire_bar.value = value
 @export var punch_dash_speed: float = 7.5
+
+@export_group("Upgrades")
+@export var Can_Flame_Burst: bool = false
+@export var Can_Air_Dash: bool = false
+@export var Can_Up_Blast: bool = false
 
 @export_group("Death Impulse")
 @export var death_launch_force: Vector2 = Vector2(4.0, -7.0)
@@ -80,6 +84,10 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var invincibility_timer: Timer = $InvincibilityTimer
 @onready var coyote_time: Timer = $CoyoteTime
 @onready var jump_buffer: Timer = $JumpBuffer
+@onready var tail: Node2D = $Tail
+
+
+
 
 # --- Private / Runtime Variables ---
 var current_speed: float = 1.4
@@ -199,6 +207,7 @@ func _physics_process(delta: float) -> void:
 		if direction != 0:
 			velocity.x = move_toward(velocity.x, direction * target_speed, accel * delta)
 			sprite.flip_h = direction < 0
+			tail.scale.x = direction
 		else:
 			velocity.x = move_toward(velocity.x, 0.0, deccel * delta)
 			
@@ -336,7 +345,7 @@ func dash() -> void:
 	if modulate_tween and modulate_tween.is_running():
 		modulate_tween.kill()
 		
-	if Input.is_action_pressed("Move_Up"):
+	if Input.is_action_pressed("Move_Up") and Can_Up_Blast:
 		if fire < 20: return
 		fire -= 20.0
 		dash_timeout.start(0.2)
@@ -397,7 +406,7 @@ func dash() -> void:
 			if modulate_tween and modulate_tween.is_running(): modulate_tween.kill()
 			modulate_tween = create_tween()
 			modulate_tween.tween_property(sprite, "self_modulate", Color.WHITE, 0.25)
-	else:
+	elif Can_Air_Dash:
 		is_ground_dashing = false
 		if current_movement_state == MovementState.ON_LEDGE:
 			exit_ledge()
@@ -470,6 +479,7 @@ func request_damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multi
 func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: float = 1.0) -> void:
 	if current_state == State.DEAD or is_invincible:
 		return
+	grant_invincibility(1.0)
 
 	Health = max(Health - value, 0.0)
 	_play_hit_flash.rpc()
@@ -480,7 +490,6 @@ func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: f
 	elif origin != Vector2.ZERO:
 		var dir_x := 1.0 if origin.x < global_position.x else -1.0
 		apply_physics_impulse(Vector2(4.0 * dir_x * velocity_multiplier, -3.0 * velocity_multiplier))
-		grant_invincibility(1.0)
 
 func grant_invincibility(multiplier: float = 1.0) -> void:
 	if is_invincible or not invincibility_timer:
@@ -603,35 +612,32 @@ func punch() -> void:
 	punch_timeout.start()
 	combo_count = (combo_count % 4) + 1
 	
-	if combo_count == 4:
+	if combo_count == 4 and Can_Flame_Burst == true:
 		if fire > 10:
 			fire -= 10
+			_execute_finisher()
+			play_animation_once("Punch4")
 		else:
 			combo_count = 1
 	else:
 		punch_hitbox_activate(0.15)
+		var current_step: int = 1 if combo_count == 4 else combo_count
+		override_animations = true
 		
-	
-	var current_step: int = combo_count
-	override_animations = true
-	
-	if is_on_floor():
-		if old_speed < 0.0:
-			old_speed = speed_multiplier
-			speed_multiplier = 0.0
-		var forward_direction: float = -1.0 if sprite.flip_h else 1.0
-		velocity.x = forward_direction * (punch_dash_speed * UNIT_SCALE)
-	
-	match current_step:
-		1: play_animation_once("Punch1")
-		2: play_animation_once("Punch2")
-		3: play_animation_once("Punch3")
-		4:
-			play_animation_once("Punch4")
-			_execute_finisher()
+		if is_on_floor():
+			if old_speed < 0.0:
+				old_speed = speed_multiplier
+				speed_multiplier = 0.0
+			if current_step != 4:
+				var forward_direction: float = -1.0 if sprite.flip_h else 1.0
+				velocity.x = forward_direction * (punch_dash_speed * UNIT_SCALE)
+		
+		match current_step:
+			1: play_animation_once("Punch1")
+			2: play_animation_once("Punch2")
+			3: play_animation_once("Punch3")
 
 func punch_hitbox_activate(linger: float) -> void:
-	print("Hit!")
 	var hitbox : Area2D = punch_hitbox.duplicate()
 	add_child(hitbox)
 	var direction = -1.0 if sprite.flip_h else 1.0

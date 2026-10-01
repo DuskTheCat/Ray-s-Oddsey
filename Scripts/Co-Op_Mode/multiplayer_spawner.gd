@@ -1,6 +1,7 @@
 extends MultiplayerSpawner
 
 @export var network_player: PackedScene
+@export var second_player: PackedScene
 @export var Spawn_Node: Node2D
 
 func _ready() -> void:
