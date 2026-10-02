@@ -1,6 +1,6 @@
 extends Control
 
-const MAIN_MENU = "res://Scenes/Menus/menu.tscn" # use your real path
+const MAIN_MENU = "res://Scenes/Menus/menu.tscn"
 const LANGUAGES: Array[String] = ["en", "ja"]
 
 @onready var language_button: Button = $LanguageButton
