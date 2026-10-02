@@ -84,9 +84,6 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @onready var invincibility_timer: Timer = $InvincibilityTimer
 @onready var coyote_time: Timer = $CoyoteTime
 @onready var jump_buffer: Timer = $JumpBuffer
-@onready var tail: Node2D = $Tail
-
-
 
 
 # --- Private / Runtime Variables ---
@@ -169,6 +166,8 @@ func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority(): return
 	
 	_process_camera_shake(delta)
+	
+	dash_timeout.wait_time = 0.7
 
 	if current_state == State.DEAD:
 		_process_death_movement(delta)
@@ -207,7 +206,6 @@ func _physics_process(delta: float) -> void:
 		if direction != 0:
 			velocity.x = move_toward(velocity.x, direction * target_speed, accel * delta)
 			sprite.flip_h = direction < 0
-			tail.scale.x = direction
 		else:
 			velocity.x = move_toward(velocity.x, 0.0, deccel * delta)
 			
@@ -357,7 +355,7 @@ func dash() -> void:
 		play_animation_once("Jump")
 		set_smoke_emitting(true)
 		
-		grant_invincibility(0.067)
+		grant_invincibility(0.3)
 		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
 		get_tree().create_timer(0.3).timeout.connect(func():
@@ -377,7 +375,7 @@ func dash() -> void:
 		override_animations = true
 		play_animation_once("Dash")
 		
-		grant_invincibility(0.067)
+		grant_invincibility(0.3)
 		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
 		
@@ -417,7 +415,7 @@ func dash() -> void:
 		launch_vector = Vector2(ground_dash_direction * dash_velocity, 0.0)
 		apply_physics_impulse(launch_vector, true)
 		
-		grant_invincibility(0.5)
+		grant_invincibility(0.3)
 		
 		sprite.self_modulate = Color(0.3, 0.3, 0.3, 1.0)
 		
@@ -477,13 +475,20 @@ func request_damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multi
 	damage(value, origin, velocity_multiplier)
 
 func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: float = 1.0) -> void:
-	if current_state == State.DEAD or is_invincible:
+	if current_state == State.DEAD or is_invincible and !invincibility_timer.is_stopped():
 		return
-	grant_invincibility(1.0)
+	grant_invincibility(3.0)
 
 	Health = max(Health - value, 0.0)
 	_play_hit_flash.rpc()
 	apply_shake(40000)
+	
+	set_physics_process(false)
+	override_animations = true
+	sprite.play("Ragdoll")
+	await get_tree().create_timer(0.2).timeout
+	set_physics_process(true)
+	override_animations = false
 
 	if Health <= 0.0:
 		_sync_die.rpc(origin)
@@ -491,14 +496,12 @@ func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: f
 		var dir_x := 1.0 if origin.x < global_position.x else -1.0
 		apply_physics_impulse(Vector2(4.0 * dir_x * velocity_multiplier, -3.0 * velocity_multiplier))
 
-func grant_invincibility(multiplier: float = 1.0) -> void:
-	if is_invincible or not invincibility_timer:
-		return
-		
+func grant_invincibility(time: float = 1.0) -> void:
 	is_invincible = true
-	var duration: float = invincibility_timer.wait_time * multiplier
+	var duration: float = time
 	
-	invincibility_timer.start(duration)
+	if time > invincibility_timer.time_left:
+		invincibility_timer.start(duration)
 		
 	if sprite:
 		var flash_tween := create_tween().set_loops(max(1, int(duration / 0.1)))

@@ -44,7 +44,7 @@ properties/6/spawn = true
 properties/6/replication_mode = 1
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ut5v"]
-size = Vector2(70, 59)
+size = Vector2(97, 59)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lmyrk"]
 atlas = ExtResource("3_0gqhc")
@@ -727,7 +727,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PunchHitbox" unique_id=1205447313]
-position = Vector2(32, 3.5)
+position = Vector2(18.5, 3.5)
 shape = SubResource("RectangleShape2D_1ut5v")
 
 [node name="HurtBox" type="Area2D" parent="." unique_id=816138609]

@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://84xymy76oxs4"]
+
+[ext_resource type="Script" uid="uid://bwb5cq4xq64pg" path="res://Scripts/Reusable/Hidden.gd" id="1_uxgcb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xhsim"]
+size = Vector2(40, 40)
+
+[node name="Hidden" type="ColorRect" unique_id=831959682]
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_uxgcb")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=104842169]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=2013736608]
+position = Vector2(20, 20)
+shape = SubResource("RectangleShape2D_xhsim")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

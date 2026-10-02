@@ -41,6 +41,7 @@ enum MovementState { NORMAL, ON_LEDGE, PHYSICS_OBJECT }
 @export var can_punch_in_air: bool = false
 @export var push_force: float = 2.0
 @export var hurtbox_pushback_force: float = 2.5
+@export var punch_dash_speed: float = 9.0
 
 @export_group("Death Impulse")
 @export var death_launch_force: Vector2 = Vector2(5.0, -8.0)
@@ -69,6 +70,7 @@ var airborne_target_position: Vector2 = Vector2.ZERO
 var was_on_floor_last_frame: bool = true
 var damagetween: Tween
 var oldmodulate = modulate
+var old_speed
 
 # --- Turning State Variables ---
 var current_facing_direction: float = 1.0
@@ -108,19 +110,18 @@ var link_target_velocity_x: float = 0.0
 @onready var ray_cast_2d: RayCast2D = $RayCast2D
 
 @onready var punch_hitbox: Area2D = $PunchHitbox
-@onready var punch_range_area: Area2D = $PunchHitbox
+@onready var punch_range_area: Area2D = $ReachHitbox
 
 @onready var stun_time: Timer = $StunTime
 @onready var alert_call: Area2D = $AlertCall
 
 @onready var hurt_box: Area2D = $HurtBox
 
-
-
 func _enter_tree() -> void:
 	set_multiplayer_authority(1)
 
 func _ready() -> void:
+	old_speed = speed_multiplier
 	self_modulate = Color.TRANSPARENT
 	
 	current_facing_direction = float(initial_facing_direction)
@@ -191,17 +192,6 @@ func _update_facing_orientation(dir_x: float) -> void:
 		target_facing_direction = new_target_sign
 		turn_timer = turn_delay
 
-func _process_turn_delay(delta: float) -> void:
-	# Lock turn execution mid-attack
-	if current_state == State.ATTACK or is_punching or !punch_windup_time.is_stopped():
-		return
-
-	if target_facing_direction != current_facing_direction:
-		turn_timer -= delta
-		if turn_timer <= 0.0:
-			current_facing_direction = target_facing_direction
-			_force_apply_facing(current_facing_direction)
-
 func _force_apply_facing(dir_sign: float) -> void:
 	var is_left: bool = (dir_sign < 0.0)
 	if sprite:
@@ -261,7 +251,8 @@ func _on_node_added(node: Node) -> void:
 			get_tree().node_added.disconnect(_on_node_added)
 
 func _physics_process(delta: float) -> void:
-	_process_turn_delay(delta)
+	current_facing_direction = target_facing_direction
+	_force_apply_facing(current_facing_direction)
 
 	if not multiplayer.is_server():
 		update_animation()
@@ -272,6 +263,7 @@ func _physics_process(delta: float) -> void:
 	ledge_check.scale.x = current_facing_direction
 	wall_check.scale.x = current_facing_direction
 	punch_hitbox.scale.x = current_facing_direction
+	punch_range_area.scale.x = current_facing_direction
 
 	if current_state == State.DEAD:
 		_process_death_movement(delta)
@@ -399,12 +391,12 @@ func _on_punch_range_body_exited(body: Node2D) -> void:
 func _check_punch_range() -> void:
 	if current_state == State.STUNNED or current_state == State.DEAD:
 		return
-
+		
 	targets_in_punch_range = targets_in_punch_range.filter(func(b): return is_instance_valid(b))
 	
 	if not targets_in_punch_range.is_empty():
 		Target = targets_in_punch_range[0]
-		if can_punch and not is_punching and is_on_floor():
+		if can_punch and not is_punching:
 			punch()
 	elif current_state == State.ATTACK and not is_punching:
 		current_state = State.CHASE if is_instance_valid(Target) else State.IDLE
@@ -412,26 +404,39 @@ func _check_punch_range() -> void:
 func punch() -> void:
 	if not can_punch or is_punching or current_state == State.STUNNED or current_state == State.DEAD:
 		return
-
+		
 	can_punch = false
 	is_punching = true
 	current_state = State.ATTACK
-	move_direction = 0.0
-
+	
+	if is_on_floor():
+		move_direction = 0.0
+	else:
+		speed_multiplier *= 0.2
+		
 	override_animations = true
-	play_animation_once("Idle")
 	punch_windup_time.start()
+	
+	# Wait safely for the windup to finish without blocking the engine thread
 	await punch_windup_time.timeout
-
-	if current_state == State.STUNNED or current_state == State.DEAD:
+	
+	# Check if we got stunned or died during the windup period
+	if not stun_time.is_stopped() or current_state == State.STUNNED or current_state == State.DEAD:
+		override_animations = false
 		_reset_attack_state()
 		return
-
+		
+	# Proceed with the punch if uninterrupted
+	speed_multiplier = old_speed
 	play_animation_once("Punch1")
 	punch_hitbox_activate(0.2)
-
+	
+	var forward_direction: float = -1.0 if target_facing_direction < 0.0 else 1.0
+	velocity.x = forward_direction * (punch_dash_speed * UNIT_SCALE)
+	
 	await get_tree().create_timer(attack_cooldown_time).timeout
 	_reset_attack_state()
+
 
 func _reset_attack_state() -> void:
 	can_punch = true
@@ -464,6 +469,9 @@ func _on_punch_hitbox_area_entered(area: Area2D) -> void:
 		if parent_node.has_method("damage"):
 			parent_node.damage(attack_damage, global_position, 1.0)
 			_trigger_camera_shake(parent_node)
+			var direction = -1.0 if target_facing_direction < 0.0 else 1.0
+			velocity.y = -1 * UNIT_SCALE
+			velocity.x = (1 * UNIT_SCALE) * direction
 
 func _trigger_camera_shake(target_node: Node) -> void:
 	if target_node and target_node.has_method("apply_shake"):
@@ -726,7 +734,7 @@ func request_damage(amount: float, origin: Vector2, velocity_multiplier: float, 
 func damage(amount: float, origin: Vector2, velocity_multiplier: float, attacker: CharacterBody2D = null) -> void:
 	if current_state == State.DEAD:
 		return
-
+	
 	if is_instance_valid(attacker):
 		last_attacker = attacker
 		Target = attacker
@@ -754,6 +762,10 @@ func damage(amount: float, origin: Vector2, velocity_multiplier: float, attacker
 		if origin != Vector2.ZERO:
 			var dir_x: float = 1.0 if origin.x < global_position.x else -1.0
 			apply_impulse(Vector2(dir_x * 2.5 * velocity_multiplier, -3.0), 0.4)
+			
+	hurt_box.set_collision_mask_value(1, false)
+	await get_tree().create_timer(0.3).timeout
+	hurt_box.set_collision_mask_value(1, true)
 
 @rpc("authority", "call_local", "reliable")
 func _spawn_hit_effect(origin: Vector2) -> void:
@@ -785,6 +797,7 @@ func die(origin: Vector2 = Vector2.ZERO) -> void:
 	_cancel_alert()
 	
 	set_collision_mask_value(2, false)
+	hurt_box.set_collision_mask_value(1, false)
 	set_collision_mask_value(3, false)
 	
 	var dir_x: float = 0.0

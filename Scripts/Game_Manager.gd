@@ -19,7 +19,6 @@ func spawn_player(id: int) -> void:
 	var player = player_scene.instantiate()
 	player.name = str(id) # Name must match the peer ID for MultiplayerSpawner to work
 	add_child(player)
-	$EvilEnemy.Target = player
 	
 	# Optional: Set spawn positions based on ID
 	# player.global_position = get_node("SpawnPoint").global_position
