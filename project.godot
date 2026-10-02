@@ -21,6 +21,7 @@ LoadManager="*uid://7r27emuv3vu0"
 NetworkHandler="*uid://1e2qieep75fp"
 Noray="*uid://gu4bv4tgms3x"
 PacketHandshake="*uid://tt3j25a05n7c"
+Settings="*uid://bfpuw5v2gutht"
 
 [debug]
 
@@ -49,6 +50,10 @@ Entity="Nodes which are alive and can die or damaged or healed."
 Player="Characters which can be, or is controlled by a Player."
 Enemy="Characters that are EVIL!!!"
 Ray="Used for effects and visuals mainly"
+
+[gui]
+
+theme/custom_font="uid://d17cvvgicgaug"
 
 [input]
 
@@ -92,6 +97,10 @@ Punch={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
 ]
 }
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://translations.en.translation", "res://translations.ja.translation")
 
 [physics]
 
