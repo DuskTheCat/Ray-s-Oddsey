@@ -11,6 +11,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bc13x")
 
+[node name="Label" type="Label" parent="." unique_id=966793202]
+layout_mode = 0
+offset_left = 346.0
+offset_top = 25.0
+offset_right = 1601.0
+offset_bottom = 157.0
+theme_override_font_sizes/font_size = 96
+text = "GAME_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1813722486]
 layout_mode = 1
 anchors_preset = -1
@@ -26,13 +37,18 @@ metadata/_edit_use_anchors_ = true
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1182985419]
 layout_mode = 2
 theme_override_font_sizes/font_size = 143
-text = "Play"
+text = "PLAY"
 
 [node name="Button2" type="Button" parent="VBoxContainer" unique_id=1197497765]
 layout_mode = 2
 theme_override_font_sizes/font_size = 143
-text = "Play Co-Op
-"
+text = "PLAY_COOP"
+
+[node name="Button3" type="Button" parent="VBoxContainer" unique_id=658690385]
+layout_mode = 2
+theme_override_font_sizes/font_size = 143
+text = "SETTINGS"
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
