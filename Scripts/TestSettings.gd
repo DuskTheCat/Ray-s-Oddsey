@@ -1,7 +1,7 @@
 extends Control
 
 const MAIN_MENU = "res://Scenes/Menus/menu.tscn"
-const LANGUAGES: Array[String] = ["en", "ja"]
+const LANGUAGES: Array[String] = ["en", "ja", "sv"]
 
 @onready var language_button: Button = $LanguageButton
 
@@ -20,6 +20,8 @@ func _update_button_text() -> void:
 	match TranslationServer.get_locale().substr(0, 2):
 		"ja":
 			language_button.text = "日本語"
+		"sv":
+			language_button.text = "Svenska"
 		_:
 			language_button.text = "English"
 

@@ -20,8 +20,8 @@ Scouring for musicians for orchestral like music.
 
   | <img src="https://github.com/Xansidev.png" width="100" height="100"> | <img src="https://github.com/DuskTheCat.png" width="100" height="100"> |
   |:---:|:---:|
-  | [Xansidev](https://github.com/Xansidev) | [DuskTheCat](https://github.com/DuskTheCat) |
-  | Developer, Game Designer, Concept Artist | Developer, Artist, Lead Developer |
+  | [Xansidev](https://github.com/Xansidev) | [DuskTheCat](https://github.com/DuskTheCat) | [MX](https://github.com/a2kvarnstrom)|
+  | Developer, Game Designer, Concept Artist, Translator | Developer, Artist, Lead Developer | Translator |
 
 </div>
 </div>
@@ -38,8 +38,9 @@ Scouring for musicians for orchestral like music.
 
 | Language | Status |
 |:---:|:---:|
-| Japanese | ✅ |
 | English | ✅ |
+| Japanese | Incomplete |
+| Swedish | Incomplete |
 
 ---
 

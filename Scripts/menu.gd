@@ -7,7 +7,7 @@ const TEST_LEVEL_COOP = "res://Scenes/Tests/TestLevelCoop.tscn"
 const TEST_SETTINGS = "res://Scenes/Tests/TestSettings.tscn"
 
 # Localization stuff.
-@export_enum("en", "ja") var language: String = "en":
+@export_enum("en", "ja", "sv") var language: String = "en":
 	set(value):
 		language = value
 		TranslationServer.set_locale(value)
