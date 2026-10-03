@@ -494,7 +494,7 @@ func damage(value: float, origin: Vector2 = Vector2.ZERO, velocity_multiplier: f
 		_sync_die.rpc(origin)
 	elif origin != Vector2.ZERO:
 		var dir_x := 1.0 if origin.x < global_position.x else -1.0
-		apply_physics_impulse(Vector2(4.0 * dir_x * velocity_multiplier, -3.0 * velocity_multiplier))
+		apply_physics_impulse(Vector2(2.3 * dir_x * velocity_multiplier, -3.0 * velocity_multiplier))
 
 func grant_invincibility(time: float = 1.0) -> void:
 	is_invincible = true
